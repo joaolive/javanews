@@ -8,6 +8,7 @@ import com.joaolive.javanews.user.application.port.out.UserRepository;
 import com.joaolive.javanews.user.domain.exception.InvalidUsernameException;
 import com.joaolive.javanews.user.domain.model.User;
 import com.joaolive.javanews.user.domain.valueobject.Bio;
+import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
@@ -22,13 +23,14 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 	@Override
 	@Transactional
 	public User execute(CreateUserCommand command) {
-		Username username = new Username(command.username());
-		Name firstName = new Name(command.firstName());
-		Name lastName = new Name(command.lastName());
-		Bio bio = new Bio(command.bio());
+		Email email = Email.create(command.email());
+		Username username = Username.create(command.username());
+		Name firstName = Name.create(command.firstName());
+		Name lastName = Name.create(command.lastName());
+		Bio bio = Bio.create(command.bio());
 		if (userRepository.existsByUsername(username))
 			throw new InvalidUsernameException("Username is already in use");
-		User user = User.createUser(username, firstName, lastName, bio, command.avatarKey());
+		User user = User.createUser(email, username, firstName, lastName, bio, command.avatarKey());
 		userRepository.save(user);
 		return (user);
 	}

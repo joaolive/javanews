@@ -17,7 +17,7 @@ public class CheckUsernameAvailabilityUseCaseImpl implements CheckUsernameAvaila
 	@Override
 	@Transactional(readOnly = true)
 	public boolean execute(String rawUsername) {
-		Username username = new Username(rawUsername);
+		Username username = Username.create(rawUsername);
 		return (!userRepository.existsByUsername(username));
 	}
 }
