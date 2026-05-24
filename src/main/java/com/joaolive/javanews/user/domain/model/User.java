@@ -39,7 +39,7 @@ public class User {
 
 	public static User reconstitute(UUID id, String email, String username, String firstName, String lastName, String bio, String avatarKey,
 			Instant createdAt, Instant updatedAt) {
-		return new User(id, Email.restore(email), new Username(username), new Name(firstName), new Name(lastName), new Bio(bio), avatarKey, createdAt, updatedAt);
+		return new User(id, Email.restore(email), Username.restore(username), Name.restore(firstName), Name.restore(lastName), Bio.restore(bio), avatarKey, createdAt, updatedAt);
 	}
 
 	public void updateUser(Name firstName, Name lastName, Bio bio, String avatarKey) {
