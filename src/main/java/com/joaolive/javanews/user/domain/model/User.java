@@ -4,11 +4,13 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.joaolive.javanews.user.domain.valueobject.Bio;
+import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
 public class User {
 	private final UUID		id;
+	private Email			email;
 	private Username		username;
 	private Name			firstName;
 	private Name			lastName;
@@ -17,9 +19,10 @@ public class User {
 	private final Instant	createdAt;
 	private Instant			updatedAt;
 
-	private User(UUID id, Username username, Name firstName, Name lastName, Bio bio, String avatarKey,
+	private User(UUID id, Email email, Username username, Name firstName, Name lastName, Bio bio, String avatarKey,
 			Instant createdAt, Instant updatedAt) {
 		this.id = id;
+		this.email = email;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -29,14 +32,14 @@ public class User {
 		this.updatedAt = updatedAt;
 	}
 
-	public static User createUser(Username username, Name firstName, Name lastName, Bio bio, String avatarKey) {
+	public static User createUser(Email email, Username username, Name firstName, Name lastName, Bio bio, String avatarKey) {
 		Instant now = Instant.now();
-		return new User(UUID.randomUUID(), username, firstName, lastName, bio, avatarKey, now, now);
+		return new User(UUID.randomUUID(), email, username, firstName, lastName, bio, avatarKey, now, now);
 	}
 
-	public static User reconstitute(UUID id, String username, String firstName, String lastName, String bio, String avatarKey,
+	public static User reconstitute(UUID id, String email, String username, String firstName, String lastName, String bio, String avatarKey,
 			Instant createdAt, Instant updatedAt) {
-		return new User(id, new Username(username), new Name(firstName), new Name(lastName), new Bio(bio), avatarKey, createdAt, updatedAt);
+		return new User(id, Email.restore(email), new Username(username), new Name(firstName), new Name(lastName), new Bio(bio), avatarKey, createdAt, updatedAt);
 	}
 
 	public void updateUser(Name firstName, Name lastName, Bio bio, String avatarKey) {
@@ -49,6 +52,10 @@ public class User {
 
 	public UUID getId() {
 		return id;
+	}
+
+	public Email getEmail() {
+		return email;
 	}
 
 	public Username getUsername() {
