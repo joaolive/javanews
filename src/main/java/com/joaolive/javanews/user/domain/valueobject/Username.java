@@ -23,4 +23,8 @@ public class Username {
 	public static Username restore(String value) {
 		return new Username(value);
 	}
+
+	public String getValue() {
+		return value;
+	}
 }

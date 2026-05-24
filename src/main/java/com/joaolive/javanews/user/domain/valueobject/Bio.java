@@ -16,4 +16,8 @@ public class Bio {
 	public static Bio restore(String value) {
 		return new Bio(value);
 	}
+
+	public String getValue() {
+		return value;
+	}
 }

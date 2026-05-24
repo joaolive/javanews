@@ -18,4 +18,8 @@ public class Name {
 	public static Name restore(String value) {
 		return new Name(value);
 	}
+
+	public String getValue() {
+		return value;
+	}
 }

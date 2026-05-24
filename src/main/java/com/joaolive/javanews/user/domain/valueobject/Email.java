@@ -20,4 +20,8 @@ public class Email {
 	public static Email restore(String value) {
 		return new Email(value);
 	}
+
+	public String getValue() {
+		return value;
+	}
 }
