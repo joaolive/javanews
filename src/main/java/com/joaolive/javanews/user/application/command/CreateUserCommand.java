@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.application.commands;
+package com.joaolive.javanews.user.application.command;
 
 public record CreateUserCommand(
 	String	username, 

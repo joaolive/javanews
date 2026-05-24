@@ -1,11 +1,11 @@
-package com.joaolive.javanews.user.domain;
+package com.joaolive.javanews.user.domain.model;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import com.joaolive.javanews.user.domain.records.Bio;
-import com.joaolive.javanews.user.domain.records.Name;
-import com.joaolive.javanews.user.domain.records.Username;
+import com.joaolive.javanews.user.domain.valueobject.Bio;
+import com.joaolive.javanews.user.domain.valueobject.Name;
+import com.joaolive.javanews.user.domain.valueobject.Username;
 
 public class User {
 	private final UUID		id;
