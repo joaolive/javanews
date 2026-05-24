@@ -1,0 +1,34 @@
+{
+    "name": "Java Dev Environment",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-boot-dev-pack",
+                "postman.postman-for-vscode",
+                "redhat.vscode-yaml",
+                "xyz.plsql-language",
+                "aykutsarac.jsoncrack-vscode"
+            ],
+            "settings": {
+                "chat.disableAIFeatures": true
+            }
+        }
+    },
+    "remoteUser": "vscode",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "25",
+            "installMaven": true,
+            "mavenVersion": "3.9.6"
+        },
+        "ghcr.io/devcontainers/features/common-utils:1": {
+            "upgradePackages": false,
+            "configureZshAsDefaultShell": true
+        }
+    },
+    "forwardPorts": [8080, 5050, 5032]
+}
