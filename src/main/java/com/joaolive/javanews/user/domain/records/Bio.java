@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.records;
+package com.joaolive.javanews.user.domain.records;
 
 public record Bio(String value) {
 	public Bio {

@@ -3,9 +3,9 @@ package com.joaolive.javanews.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.joaolive.javanews.user.records.Bio;
-import com.joaolive.javanews.user.records.Name;
-import com.joaolive.javanews.user.records.Username;
+import com.joaolive.javanews.user.domain.records.Bio;
+import com.joaolive.javanews.user.domain.records.Name;
+import com.joaolive.javanews.user.domain.records.Username;
 
 public class User {
 	private final UUID		id;
