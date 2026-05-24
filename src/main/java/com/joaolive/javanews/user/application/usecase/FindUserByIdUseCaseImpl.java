@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.user.application.port.out.UserRepository;
-import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
+import com.joaolive.javanews.user.domain.exception.ResourceAlreadyExistsException;
 import com.joaolive.javanews.user.domain.model.User;
 
 @Service
@@ -21,6 +21,6 @@ public class FindUserByIdUseCaseImpl implements FindUserByIdUseCase {
 	@Transactional(readOnly = true)
 	public User execute(UUID id) {
 		return (userRepository.findById(id)
-			.orElseThrow(() -> new UserNotFoundException("User with ID '" + id + "' not found")));
+			.orElseThrow(() -> new ResourceAlreadyExistsException("User with ID '" + id + "' not found")));
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joaolive.javanews.user.application.port.out.UserRepository;
 import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Repository
@@ -30,6 +31,11 @@ public class UserRepositoryAdapter implements UserRepository {
 	@Override
 	public boolean existsByUsername(Username username) {
 		return (userRepository.existsByUsername(username.getValue()));
+	}
+
+	@Override
+	public boolean existsByEmail(Email email) {
+		return userRepository.existsByEmail(email.getValue());
 	}
 	
 }
