@@ -2,8 +2,14 @@ package com.joaolive.javanews.user.domain.valueobject;
 
 import java.util.Objects;
 
-public record Username(String value) {
-	public Username {
+public class Username {
+	private final String value;
+
+	private Username(String value) {
+		this.value = value;
+	}
+
+	public static Username create(String value) {
 		Objects.requireNonNull(value, "Username cannot be null");
 		if (value.isBlank())
 			throw new IllegalArgumentException("Username cannot be blank");
@@ -11,5 +17,10 @@ public record Username(String value) {
 			throw new IllegalArgumentException("Username must be between 3 and 30 characters");
 		if (!value.matches("^(?=.{3,30}$)(?!.*\\.\\.)(?!\\.)[a-zA-Z0-9._]+(?<!\\.)$"))
 			throw new IllegalArgumentException("Username can only contain letters, numbers, dots and underscores");
+		return new Username(value);
+	}
+
+	public static Username restore(String value) {
+		return new Username(value);
 	}
 }
