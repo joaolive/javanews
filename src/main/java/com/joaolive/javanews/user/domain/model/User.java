@@ -1,17 +1,20 @@
 package com.joaolive.javanews.user.domain.model;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;
+import com.joaolive.javanews.user.domain.valueobject.Role;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
 public class User {
 	private final UUID		id;
 	private Email			email;
 	private Username		username;
+	private String			password;
 	private Name			firstName;
 	private Name			lastName;
 	private Bio				bio;
@@ -19,27 +22,31 @@ public class User {
 	private final Instant	createdAt;
 	private Instant			updatedAt;
 
-	private User(UUID id, Email email, Username username, Name firstName, Name lastName, Bio bio, String avatarKey,
-			Instant createdAt, Instant updatedAt) {
+	private Set<Role>		roles;
+
+	private User(UUID id, Email email, Username username, String password, Name firstName, Name lastName, Bio bio, String avatarKey,
+			Instant createdAt, Instant updatedAt, Set<Role> roles) {
 		this.id = id;
 		this.email = email;
 		this.username = username;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.bio = bio;
 		this.avatarKey = avatarKey;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.roles = roles;
 	}
 
-	public static User createUser(Email email, Username username, Name firstName, Name lastName, Bio bio, String avatarKey) {
+	public static User createUser(Email email, Username username, String password, Name firstName, Name lastName, Bio bio, String avatarKey) {
 		Instant now = Instant.now();
-		return new User(UUID.randomUUID(), email, username, firstName, lastName, bio, avatarKey, now, now);
+		return new User(UUID.randomUUID(), email, username, password, firstName, lastName, bio, avatarKey, now, now, Set.of(Role.USER));
 	}
 
-	public static User reconstitute(UUID id, String email, String username, String firstName, String lastName, String bio, String avatarKey,
-			Instant createdAt, Instant updatedAt) {
-		return new User(id, Email.restore(email), Username.restore(username), Name.restore(firstName), Name.restore(lastName), Bio.restore(bio), avatarKey, createdAt, updatedAt);
+	public static User reconstitute(UUID id, String email, String username, String password, String firstName, String lastName, String bio, String avatarKey,
+			Instant createdAt, Instant updatedAt, Set<Role> roles) {
+		return new User(id, Email.restore(email), Username.restore(username), password, Name.restore(firstName), Name.restore(lastName), Bio.restore(bio), avatarKey, createdAt, updatedAt, roles);
 	}
 
 	public void updateUser(Name firstName, Name lastName, Bio bio, String avatarKey) {
@@ -60,6 +67,10 @@ public class User {
 
 	public Username getUsername() {
 		return username;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public Name getFirstName() {
@@ -84,5 +95,9 @@ public class User {
 
 	public Instant getUpdatedAt() {
 		return updatedAt;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
 	}
 }
