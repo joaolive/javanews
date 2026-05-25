@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,6 +43,11 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/check-username")
+	public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam String username) {
+		return ResponseEntity.ok(checkUsernameAvailabilityUseCase.execute(username));
+	}
+	
 	@PostMapping
 	public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
 		User user = createUserUseCase.execute(request.toCommand());
