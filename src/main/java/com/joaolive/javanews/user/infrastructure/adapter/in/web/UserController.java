@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.joaolive.javanews.user.application.usecase.CheckEmailAvailabilityUseCase;
 import com.joaolive.javanews.user.application.usecase.CheckUsernameAvailabilityUseCase;
 import com.joaolive.javanews.user.application.usecase.CreateUserUseCase;
 import com.joaolive.javanews.user.application.usecase.FindUserByIdUseCase;
@@ -26,12 +27,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/users")
 public class UserController {
 	private final FindUserByIdUseCase findUserByIdUseCase;
+	private final CheckEmailAvailabilityUseCase checkEmailAvailabilityUseCase;
 	private final CheckUsernameAvailabilityUseCase checkUsernameAvailabilityUseCase;
 	private final CreateUserUseCase createUserUseCase;
 
 	public UserController(FindUserByIdUseCase findUserByIdUseCase,
+			CheckEmailAvailabilityUseCase checkEmailAvailabilityUseCase,
 			CheckUsernameAvailabilityUseCase checkUsernameAvailabilityUseCase, CreateUserUseCase createUserUseCase) {
 		this.findUserByIdUseCase = findUserByIdUseCase;
+		this.checkEmailAvailabilityUseCase = checkEmailAvailabilityUseCase;
 		this.checkUsernameAvailabilityUseCase = checkUsernameAvailabilityUseCase;
 		this.createUserUseCase = createUserUseCase;
 	}
@@ -43,6 +47,10 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/check-email")
+	public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam String email) {
+		return ResponseEntity.ok(checkEmailAvailabilityUseCase.execute(email));
+	}
 	@GetMapping("/check-username")
 	public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam String username) {
 		return ResponseEntity.ok(checkUsernameAvailabilityUseCase.execute(username));
