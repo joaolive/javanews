@@ -1,6 +1,9 @@
 package com.joaolive.javanews.user.infrastructure.adapter.out.persistence;
 
+import java.util.stream.Collectors;
+
 import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.valueobject.Role;
 
 public class UserMapper {
 	public static UserEntity toEntity(User user) {
@@ -11,11 +14,16 @@ public class UserMapper {
 		entity.setAvatarKey(user.getAvatarKey());
 		entity.setCreatedAt(user.getCreatedAt());
 		entity.setUpdatedAt(user.getUpdatedAt());
+		entity.setPassword(user.getPassword());
 		entity.setUsername(user.getUsername().getValue());
+		entity.setEmail(user.getEmail().getValue());
 		entity.setFirstName(user.getFirstName().getValue());
 		entity.setLastName(user.getLastName().getValue());
 		if (user.getBio() != null)
 			entity.setBio(user.getBio().getValue());
+		user.getRoles().forEach(x -> {
+			entity.addRole(RoleEntity.valueOf(x.name()));
+		});
 		return entity;
 	}
 
@@ -26,11 +34,14 @@ public class UserMapper {
 				entity.getId(),
 				entity.getEmail(),
 				entity.getUsername(),
+				entity.getPassword(),
 				entity.getFirstName(),
 				entity.getLastName(),
 				entity.getBio(),
 				entity.getAvatarKey(),
 				entity.getCreatedAt(),
-				entity.getUpdatedAt());
+				entity.getUpdatedAt(),
+				entity.getRoles().stream().map(x -> Role.valueOf(x.name())).collect(Collectors.toSet())
+			);
 	}
 }
