@@ -25,7 +25,12 @@ public class UserRepositoryAdapter implements UserRepository {
 
 	@Override
 	public Optional<User> findById(UUID id) {
-		return (userRepository.findById(id).map(UserMapper::toDomain));
+		return userRepository.findById(id).map(UserMapper::toDomain);
+	}
+
+	@Override
+	public Optional<User> findByEmail(Email email) {
+		return userRepository.findByEmail(email.getValue()).map(UserMapper::toDomain);
 	}
 
 	@Override

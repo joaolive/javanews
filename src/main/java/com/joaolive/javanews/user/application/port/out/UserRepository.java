@@ -10,6 +10,7 @@ import com.joaolive.javanews.user.domain.valueobject.Username;
 public interface UserRepository {
 	void save(User user);
 	Optional<User> findById(UUID id);
+	Optional<User> findByEmail(Email email);
 	boolean existsByUsername(Username username);
 	boolean existsByEmail(Email email);
 }
