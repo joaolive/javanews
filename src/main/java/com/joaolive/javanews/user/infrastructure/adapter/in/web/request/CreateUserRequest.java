@@ -5,6 +5,7 @@ import com.joaolive.javanews.user.application.command.CreateUserCommand;
 public record CreateUserRequest(
 	String email,
 	String username,
+	String password,
 	String firstName,
 	String lastName,
 	String bio,
@@ -14,6 +15,7 @@ public record CreateUserRequest(
 		return new CreateUserCommand(
 			this.email(),
 			this.username(),
+			this.password(),
 			this.firstName(),
 			this.lastName(),
 			this.bio(),
