@@ -32,7 +32,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 			throw new ResourceAlreadyExistsException("Username is already in use");
 		if (userRepository.existsByEmail(email))
 			throw new ResourceAlreadyExistsException("Email is already in use");
-		User user = User.createUser(email, username, firstName, lastName, bio, command.avatarKey());
+		User user = User.createUser(email, username, command.password(), firstName, lastName, bio, command.avatarKey());
 		userRepository.save(user);
 		return (user);
 	}
