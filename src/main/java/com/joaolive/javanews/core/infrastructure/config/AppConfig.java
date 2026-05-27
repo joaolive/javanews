@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.config;
+package com.joaolive.javanews.core.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

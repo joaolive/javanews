@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.config.customgrant;
+package com.joaolive.javanews.core.infrastructure.config.customgrant;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
