@@ -1,8 +1,8 @@
-package com.joaolive.javanews.core.infrastructure.config;
+package com.joaolive.javanews.auth.infrastructure.config;
 
-import com.joaolive.javanews.core.infrastructure.config.customgrant.CustomPasswordAuthenticationConverter;
-import com.joaolive.javanews.core.infrastructure.config.customgrant.CustomPasswordAuthenticationProvider;
-import com.joaolive.javanews.core.infrastructure.config.customgrant.CustomUserAuthorities;
+import com.joaolive.javanews.auth.infrastructure.config.customgrant.CustomPasswordAuthenticationConverter;
+import com.joaolive.javanews.auth.infrastructure.config.customgrant.CustomPasswordAuthenticationProvider;
+import com.joaolive.javanews.auth.infrastructure.config.customgrant.CustomUserAuthorities;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;

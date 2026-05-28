@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core.infrastructure.config.customgrant;
+package com.joaolive.javanews.auth.infrastructure.config.customgrant;
 
 import org.springframework.security.core.GrantedAuthority;
 
