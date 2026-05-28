@@ -51,7 +51,7 @@ public class UserEntity {
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "tb_user_roles", joinColumns = @JoinColumn(name = "user_id"))
+	@CollectionTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"))
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role")
 	private Set<RoleEntity> roles = new HashSet<>();

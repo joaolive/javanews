@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.config.customgrant;
+package com.joaolive.javanews.core.infrastructure.config.customgrant;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
