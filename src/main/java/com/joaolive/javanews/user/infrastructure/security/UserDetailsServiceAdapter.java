@@ -1,12 +1,12 @@
-package com.joaolive.javanews.user.infrastructure.adapter.security;
+package com.joaolive.javanews.user.infrastructure.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.joaolive.javanews.user.application.port.out.UserRepository;
-import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.User;
+import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 
 @Service

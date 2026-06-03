@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
-import com.joaolive.javanews.user.application.port.out.UserRepository;
+import com.joaolive.javanews.user.domain.User;
+import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.exception.UserForbiddenException;
-import com.joaolive.javanews.user.domain.model.User;
 import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;

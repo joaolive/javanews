@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joaolive.javanews.user.application.port.out.UserRepository;
+import com.joaolive.javanews.user.domain.User;
+import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
-import com.joaolive.javanews.user.domain.model.User;
 
 @Service
 public class FindUserByIdUseCase {

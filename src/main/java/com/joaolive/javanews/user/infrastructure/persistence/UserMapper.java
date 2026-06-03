@@ -1,8 +1,8 @@
-package com.joaolive.javanews.user.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.user.infrastructure.persistence;
 
 import java.util.stream.Collectors;
 
-import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.valueobject.Role;
 
 public class UserMapper {

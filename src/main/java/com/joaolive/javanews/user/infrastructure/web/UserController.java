@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.adapter.in.web;
+package com.joaolive.javanews.user.infrastructure.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,9 +8,9 @@ import com.joaolive.javanews.user.application.usecase.CheckEmailAvailabilityUseC
 import com.joaolive.javanews.user.application.usecase.CheckUsernameAvailabilityUseCase;
 import com.joaolive.javanews.user.application.usecase.CreateUserUseCase;
 import com.joaolive.javanews.user.application.usecase.FindUserByIdUseCase;
-import com.joaolive.javanews.user.domain.model.User;
-import com.joaolive.javanews.user.infrastructure.adapter.in.web.request.CreateUserRequest;
-import com.joaolive.javanews.user.infrastructure.adapter.in.web.response.UserResponse;
+import com.joaolive.javanews.user.domain.User;
+import com.joaolive.javanews.user.infrastructure.web.request.CreateUserRequest;
+import com.joaolive.javanews.user.infrastructure.web.response.UserResponse;
 
 import java.net.URI;
 import java.util.UUID;

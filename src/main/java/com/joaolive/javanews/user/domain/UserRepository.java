@@ -1,9 +1,8 @@
-package com.joaolive.javanews.user.application.port.out;
+package com.joaolive.javanews.user.domain;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import com.joaolive.javanews.user.domain.model.User;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 

@@ -1,9 +1,9 @@
-package com.joaolive.javanews.user.infrastructure.adapter.in.web.response;
+package com.joaolive.javanews.user.infrastructure.web.response;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.User;
 
 public record UserResponse(
 	UUID id,

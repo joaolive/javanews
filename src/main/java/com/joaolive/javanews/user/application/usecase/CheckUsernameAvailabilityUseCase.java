@@ -3,7 +3,7 @@ package com.joaolive.javanews.user.application.usecase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joaolive.javanews.user.application.port.out.UserRepository;
+import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Service

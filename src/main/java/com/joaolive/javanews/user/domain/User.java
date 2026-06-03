@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.domain.model;
+package com.joaolive.javanews.user.domain;
 
 import java.time.Instant;
 import java.util.Set;

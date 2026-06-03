@@ -1,12 +1,12 @@
-package com.joaolive.javanews.user.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.user.infrastructure.persistence;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
-import com.joaolive.javanews.user.application.port.out.UserRepository;
-import com.joaolive.javanews.user.domain.model.User;
+import com.joaolive.javanews.user.domain.User;
+import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 

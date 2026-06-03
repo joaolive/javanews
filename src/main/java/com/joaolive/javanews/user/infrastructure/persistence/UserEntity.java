@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.user.infrastructure.persistence;
 
 import java.time.Instant;
 import java.util.HashSet;
