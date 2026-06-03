@@ -9,7 +9,7 @@ databaseChangeLog:
       errorIfMissingOrEmpty: true
       relativeToChangelogFile: false
 
-  # - includeAll:
-  #     path: "post/"
-  #     errorIfMissingOrEmpty: false
-  #     relativeToChangelogFile: true
+  - includeAll:
+      path: "post/"
+      errorIfMissingOrEmpty: true
+      relativeToChangelogFile: true

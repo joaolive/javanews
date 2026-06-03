@@ -1,7 +1,6 @@
 package com.joaolive.javanews.post.infrastructure.web;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
