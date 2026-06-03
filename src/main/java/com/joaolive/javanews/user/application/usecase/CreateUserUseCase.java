@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
 import com.joaolive.javanews.user.application.port.out.UserRepository;
-import com.joaolive.javanews.user.domain.exception.UserAlreadyExistsException;
+import com.joaolive.javanews.user.domain.exception.UserForbiddenException;
 import com.joaolive.javanews.user.domain.model.User;
 import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
@@ -28,9 +28,9 @@ public class CreateUserUseCase {
 		Name lastName = Name.create(command.lastName());
 		Bio bio = Bio.create(command.bio());
 		if (userRepository.existsByUsername(username))
-			throw new UserAlreadyExistsException("Username is already in use");
+			throw new UserForbiddenException("Username is already in use");
 		if (userRepository.existsByEmail(email))
-			throw new UserAlreadyExistsException("Email is already in use");
+			throw new UserForbiddenException("Email is already in use");
 		User user = User.createUser(email, username, command.password(), firstName, lastName, bio, command.avatarKey());
 		userRepository.save(user);
 		return user;

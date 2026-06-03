@@ -1,7 +1,9 @@
 package com.joaolive.javanews.user.domain.exception;
 
-public class UserNotFoundException extends RuntimeException {
-	public UserNotFoundException(String msg) {
-		super(msg);
+import com.joaolive.javanews.common.domain.exception.BaseNotFoundException;
+
+public class UserNotFoundException extends BaseNotFoundException {
+	public UserNotFoundException(String message) {
+		super(message);
 	}
 }

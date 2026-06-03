@@ -1,7 +1,9 @@
 package com.joaolive.javanews.post.domain.exception;
 
-public class PostDomainValidationException extends RuntimeException {
-	public PostDomainValidationException(String msg) {
-		super(msg);
+import com.joaolive.javanews.common.domain.exception.BaseValidationException;
+
+public class PostDomainValidationException extends BaseValidationException {
+	public PostDomainValidationException(String message) {
+		super(message);
 	}
 }
