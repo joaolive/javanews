@@ -31,16 +31,6 @@ public class ResourceServerConfig {
 	private String corsOrigins;
 
 	@Bean
-	@Profile("test")
-	@Order(1)
-	SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
-
-		http.securityMatcher(PathRequest.toH2Console()).csrf(csrf -> csrf.disable())
-				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
-		return http.build();
-	}
-
-	@Bean
 	@Order(3)
 	SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
