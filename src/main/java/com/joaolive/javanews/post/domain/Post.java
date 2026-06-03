@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.domain.model;
+package com.joaolive.javanews.post.domain;
 
 import java.time.Instant;
 import java.util.Collections;

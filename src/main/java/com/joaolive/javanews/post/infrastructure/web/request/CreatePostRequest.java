@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.adapter.in.web.request;
+package com.joaolive.javanews.post.infrastructure.web.request;
 
 import java.util.Set;
 import java.util.UUID;

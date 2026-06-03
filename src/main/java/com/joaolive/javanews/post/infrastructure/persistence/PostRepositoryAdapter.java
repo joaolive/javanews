@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.post.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import com.joaolive.javanews.post.application.port.out.PostRepositoryPort;
-import com.joaolive.javanews.post.domain.model.Post;
+import com.joaolive.javanews.post.domain.Post;
+import com.joaolive.javanews.post.domain.PostRepository;
 
 @Repository
-public class PostRepositoryAdapter implements PostRepositoryPort {
+public class PostRepositoryAdapter implements PostRepository {
 	private final PostJpaRepository postRepository;
 	private final TagJpaRepository tagRepository;
 

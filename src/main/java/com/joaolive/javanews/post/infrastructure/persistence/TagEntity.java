@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.post.infrastructure.persistence;
 
 import java.util.UUID;
 

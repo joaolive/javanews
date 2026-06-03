@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.adapter.in.web;
+package com.joaolive.javanews.post.infrastructure.web;
 
 import java.net.URI;
 import java.util.UUID;
@@ -19,9 +19,9 @@ import com.joaolive.javanews.post.application.command.DeletePostCommand;
 import com.joaolive.javanews.post.application.usecase.CreatePostUseCase;
 import com.joaolive.javanews.post.application.usecase.DeletePostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostByIdUseCase;
-import com.joaolive.javanews.post.domain.model.Post;
-import com.joaolive.javanews.post.infrastructure.adapter.in.web.request.CreatePostRequest;
-import com.joaolive.javanews.post.infrastructure.adapter.in.web.response.PostResponse;
+import com.joaolive.javanews.post.domain.Post;
+import com.joaolive.javanews.post.infrastructure.web.request.CreatePostRequest;
+import com.joaolive.javanews.post.infrastructure.web.response.PostResponse;
 
 import jakarta.validation.Valid;
 

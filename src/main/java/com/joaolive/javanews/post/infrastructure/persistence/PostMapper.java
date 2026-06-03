@@ -1,9 +1,9 @@
-package com.joaolive.javanews.post.infrastructure.adapter.out.persistence;
+package com.joaolive.javanews.post.infrastructure.persistence;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.joaolive.javanews.post.domain.model.Post;
+import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.domain.valueobject.Tag;
 
 public class PostMapper {

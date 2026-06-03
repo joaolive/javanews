@@ -1,11 +1,11 @@
-package com.joaolive.javanews.post.infrastructure.adapter.in.web.response;
+package com.joaolive.javanews.post.infrastructure.web.response;
 
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.joaolive.javanews.post.domain.model.Post;
+import com.joaolive.javanews.post.domain.Post;
 
 public record PostResponse(
 	UUID id,
