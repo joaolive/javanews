@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.modulith.Modulithic;
 
 @SpringBootApplication
-@Modulithic(sharedModules = "common")
+@Modulithic(sharedModules = "core")
 public class JavanewsApplication {
 
 	public static void main(String[] args) {
