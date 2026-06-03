@@ -1,4 +1,4 @@
-package com.joaolive.javanews.auth.infrastructure.config.customgrant;
+package com.joaolive.javanews.auth.customgrant;
 
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;

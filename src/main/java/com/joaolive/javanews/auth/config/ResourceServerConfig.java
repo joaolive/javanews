@@ -1,4 +1,4 @@
-package com.joaolive.javanews.auth.infrastructure.config;
+package com.joaolive.javanews.auth.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
