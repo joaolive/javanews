@@ -12,9 +12,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.joaolive.javanews.core.exception.BaseForbiddenException;
-import com.joaolive.javanews.core.exception.BaseNotFoundException;
-import com.joaolive.javanews.core.exception.BaseValidationException;
+import com.joaolive.javanews.core.BaseForbiddenException;
+import com.joaolive.javanews.core.BaseNotFoundException;
+import com.joaolive.javanews.core.BaseValidationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
