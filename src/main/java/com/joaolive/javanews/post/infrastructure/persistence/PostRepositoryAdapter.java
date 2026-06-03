@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import com.joaolive.javanews.core.BatchFetchAligner;
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
 import com.joaolive.javanews.post.domain.Post;
@@ -48,16 +49,33 @@ public class PostRepositoryAdapter implements PostRepository {
 			request.size(),
 			Sort.by(direction, request.sortBy())
 		);
-		Page<PostEntity> entityPage = postRepository.findAll(pageable);
-		List<Post> domainPosts = entityPage.getContent().stream()
+
+		Page<PostIdProjection> pagedIds = postRepository.findPagedIds(pageable);
+		if (pagedIds.isEmpty()) {
+			return new PageResult<>(
+				List.of(),
+				pagedIds.getTotalPages(),
+				pagedIds.getTotalElements(),
+				pagedIds.getNumber(),
+				pagedIds.getSize()
+			);
+		}
+
+		List<UUID> idsToFetch = pagedIds.stream()
+			.map(x -> x.getId())
+			.toList();
+		List<PostEntity> unorderedEntities = postRepository.findWithTagsByIds(idsToFetch);
+		List<PostEntity> orderedEntities = BatchFetchAligner.align(pagedIds.getContent(), unorderedEntities);
+		List<Post> domainPosts = orderedEntities.stream()
 			.map(PostMapper::toDomain)
 			.toList();
+
 		return new PageResult<>(
 			domainPosts,
-			entityPage.getTotalPages(),
-			entityPage.getTotalElements(),
-			entityPage.getNumber(),
-			entityPage.getSize()
+			pagedIds.getTotalPages(),
+			pagedIds.getTotalElements(),
+			pagedIds.getNumber(),
+			pagedIds.getSize()
 		);
 	}
 
