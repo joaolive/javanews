@@ -13,13 +13,13 @@ import com.joaolive.javanews.post.domain.valueobject.Title;
 
 public class Post {
 	private final UUID		id;
-	private final Title		title;
-	private Slug			slug;
+	private Title			title;
+	private final Slug		slug;
 	private Body			body;
 	private UUID			authorId;
 	private final Instant	createdAt;
 	private Instant			updatedAt;
-	private final Set<Tag>	tags;
+	private Set<Tag>		tags;
 
 	private Post(UUID id, Title title, Slug slug, Body body, UUID authorId, Instant createdAt, Instant updatedAt,
 			Set<Tag> tags) {
@@ -36,6 +36,13 @@ public class Post {
 	public static Post createPost(Title title, Slug slug, Body body, UUID authorId, Set<Tag> tags) {
 		Instant now = Instant.now();
 		return new Post(UUID.randomUUID(), title, slug, body, authorId, now, now, tags);
+	}
+
+	public void updatePost(String title, String body, Set<Tag> tags) {
+		this.title = new Title(title);
+		this.body = new Body(body);
+		this.tags = new HashSet<>(tags);
+		this.updatedAt = Instant.now();
 	}
 
 	public static Post reconstitute(UUID id, String title, String slug, String body, UUID authorId, Instant createdAt,

@@ -1,0 +1,9 @@
+package com.joaolive.javanews.post.application.command;
+
+import java.util.Set;
+
+public record UpdatePostCommand(
+	String title,
+	String body,
+	Set<String> tags
+) {}

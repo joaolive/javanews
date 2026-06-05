@@ -26,11 +26,15 @@ import com.joaolive.javanews.post.application.usecase.DeletePostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostBySlugUseCase;
 import com.joaolive.javanews.post.application.usecase.ListPostsUseCase;
+import com.joaolive.javanews.post.application.usecase.UpdatePostUseCase;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.infrastructure.web.request.CreatePostRequest;
+import com.joaolive.javanews.post.infrastructure.web.request.UpdatePostRequest;
 import com.joaolive.javanews.post.infrastructure.web.response.PostResponse;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/posts")
@@ -39,6 +43,7 @@ public class PostController {
 	private final FindPostBySlugUseCase findPostBySlugUseCase;
 	private final ListPostsUseCase listPostsUseCase;
 	private final CreatePostUseCase createPostUseCase;
+	private final UpdatePostUseCase updatePostUseCase;
 	private final DeletePostByIdUseCase deletePostByIdUseCase;
 
 	public PostController(
@@ -46,11 +51,13 @@ public class PostController {
 			FindPostBySlugUseCase findPostBySlugUseCase,
 			ListPostsUseCase listPostsUseCase,
 			CreatePostUseCase createPostUseCase,
+			UpdatePostUseCase updatePostUseCase,
 			DeletePostByIdUseCase deletePostByIdUseCase) {
 		this.findPostByIdUseCase = findPostByIdUseCase;
 		this.findPostBySlugUseCase = findPostBySlugUseCase;
 		this.listPostsUseCase = listPostsUseCase;
 		this.createPostUseCase = createPostUseCase;
+		this.updatePostUseCase = updatePostUseCase;
 		this.deletePostByIdUseCase = deletePostByIdUseCase;
 	}
 
@@ -102,6 +109,17 @@ public class PostController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(post.getId()).toUri();
 		return ResponseEntity.created(uri).body(PostResponse.from(post));
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<PostResponse> update(
+		@PathVariable UUID id,
+		@Valid @RequestBody UpdatePostRequest request,
+		@AuthenticationPrincipal Jwt jwt
+	) {
+		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
+		Post post = updatePostUseCase.execute(id, requesterId, request.toCommand());
+		return ResponseEntity.ok(PostResponse.from(post));
 	}
 
 	@DeleteMapping("/{id}")
