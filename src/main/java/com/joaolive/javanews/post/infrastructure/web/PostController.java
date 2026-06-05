@@ -97,7 +97,7 @@ public class PostController {
 	public ResponseEntity<PostResponse> createPost(
 			@Valid @RequestBody CreatePostRequest request,
 			@AuthenticationPrincipal Jwt jwt) {
-		UUID authorId = UUID.fromString(jwt.getSubject());
+		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
 		Post post = createPostUseCase.execute(request.toCommand(authorId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(post.getId()).toUri();
@@ -108,7 +108,7 @@ public class PostController {
 	public ResponseEntity<Void> deletePostById(
 			@PathVariable UUID id,
 			@AuthenticationPrincipal Jwt jwt) {
-		UUID authorId = UUID.fromString(jwt.getSubject());
+		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
 		DeletePostCommand command = new DeletePostCommand(id, authorId);
 		deletePostByIdUseCase.execute(command);
 		return ResponseEntity.noContent().build();

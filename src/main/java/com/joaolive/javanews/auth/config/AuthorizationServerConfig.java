@@ -1,8 +1,8 @@
 package com.joaolive.javanews.auth.config;
 
+import com.joaolive.javanews.auth.AuthenticatedUser;
 import com.joaolive.javanews.auth.customgrant.CustomPasswordAuthenticationConverter;
 import com.joaolive.javanews.auth.customgrant.CustomPasswordAuthenticationProvider;
-import com.joaolive.javanews.auth.customgrant.CustomUserAuthorities;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -146,13 +146,14 @@ public class AuthorizationServerConfig {
 	OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
 		return context -> {
 			OAuth2ClientAuthenticationToken principal = context.getPrincipal();
-			CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
+			AuthenticatedUser user = (AuthenticatedUser) principal.getDetails();
 			List<String> authorities = user.getAuthorities().stream().map(x -> x.getAuthority()).toList();
 			if (context.getTokenType().getValue().equals("access_token")) {
 				// @formatter:off
 				context.getClaims()
 					.claim("authorities", authorities)
-					.claim("username", user.getUsername());
+					.claim("username", user.getUsername())
+					.claim("user_id", user.getId().toString());
 				// @formatter:on
 			}
 		};

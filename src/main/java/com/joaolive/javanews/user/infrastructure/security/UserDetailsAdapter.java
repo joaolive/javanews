@@ -1,15 +1,16 @@
 package com.joaolive.javanews.user.infrastructure.security;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import com.joaolive.javanews.auth.AuthenticatedUser;
 import com.joaolive.javanews.user.domain.User;
 
-public class UserDetailsAdapter implements UserDetails {
+public class UserDetailsAdapter implements AuthenticatedUser {
 	private final User user;
 
 	public UserDetailsAdapter(User user) {
@@ -33,8 +34,9 @@ public class UserDetailsAdapter implements UserDetails {
 		return user.getEmail().getValue();
 	}
 
-	public User getUser() {
-		return user;
+	@Override
+	public UUID getId() {
+		return user.getId();
 	}
 
 	@Override
@@ -56,4 +58,5 @@ public class UserDetailsAdapter implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
 }
