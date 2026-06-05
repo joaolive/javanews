@@ -20,6 +20,6 @@ public class FindPostByIdUseCase {
 	@Transactional(readOnly = true)
 	public Post execute(UUID id) {
 		return postRepository.findById(id)
-			.orElseThrow(() -> new PostNotFoundException("Post with ID '" + id + "' not found"));
+			.orElseThrow(() -> new PostNotFoundException("Post not found"));
 	}
 }

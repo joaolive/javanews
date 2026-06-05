@@ -25,7 +25,7 @@ public class UpdatePostUseCase {
 	@Transactional
 	public Post execute(UUID postId, UUID requesterId, UpdatePostCommand command) {
 		Post post = postRepository.findById(postId)
-			.orElseThrow(() -> new PostNotFoundException("Post not found with ID " + postId));
+			.orElseThrow(() -> new PostNotFoundException("Post not found"));
 		if (!post.getAuthorId().equals(requesterId))
 			throw new PostForbiddenException("User is not authorized to edit this post");
 		Set<Tag> tags = command.tags().stream()
