@@ -1,6 +1,5 @@
 package com.joaolive.javanews.post.domain;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +10,7 @@ public interface PostRepository {
 	Post save(Post post);
 	Optional<Post> findById(UUID id);
 	PageResult<Post> findAll(PaginationRequest request);
-	List<Post> findPostsByAuthorId(UUID id);
+	PageResult<Post> findByAuthorId(UUID id, PaginationRequest request);
 	void delete(UUID id);
 	Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug);
 }

@@ -15,6 +15,9 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
 	@Query("SELECT p.id as id FROM PostEntity p")
 	Page<PostIdProjection> findPagedIds(Pageable pageable);
 
+	@Query("SELECT p.id as id FROM PostEntity p WHERE p.authorId = :authorId")
+	Page<PostIdProjection> findPagedIdsByAuthorId(@Param("authorId") UUID authorId, Pageable pageable);
+
 	@Query("SELECT DISTINCT p FROM PostEntity p LEFT JOIN FETCH p.tags WHERE p.id IN :ids")
 	List<PostEntity> findWithTagsByIds(@Param("ids") List<UUID> ids);
 

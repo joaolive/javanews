@@ -25,6 +25,7 @@ import com.joaolive.javanews.post.application.usecase.CreatePostUseCase;
 import com.joaolive.javanews.post.application.usecase.DeletePostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostBySlugUseCase;
+import com.joaolive.javanews.post.application.usecase.ListPostsByAuthorUseCase;
 import com.joaolive.javanews.post.application.usecase.ListPostsUseCase;
 import com.joaolive.javanews.post.application.usecase.UpdatePostUseCase;
 import com.joaolive.javanews.post.domain.Post;
@@ -42,6 +43,7 @@ public class PostController {
 	private final FindPostByIdUseCase findPostByIdUseCase;
 	private final FindPostBySlugUseCase findPostBySlugUseCase;
 	private final ListPostsUseCase listPostsUseCase;
+	private final ListPostsByAuthorUseCase listPostsByAuthorUseCase;
 	private final CreatePostUseCase createPostUseCase;
 	private final UpdatePostUseCase updatePostUseCase;
 	private final DeletePostByIdUseCase deletePostByIdUseCase;
@@ -50,12 +52,14 @@ public class PostController {
 			FindPostByIdUseCase findPostByIdUseCase,
 			FindPostBySlugUseCase findPostBySlugUseCase,
 			ListPostsUseCase listPostsUseCase,
+			ListPostsByAuthorUseCase listPostsByAuthorUseCase,
 			CreatePostUseCase createPostUseCase,
 			UpdatePostUseCase updatePostUseCase,
 			DeletePostByIdUseCase deletePostByIdUseCase) {
 		this.findPostByIdUseCase = findPostByIdUseCase;
 		this.findPostBySlugUseCase = findPostBySlugUseCase;
 		this.listPostsUseCase = listPostsUseCase;
+		this.listPostsByAuthorUseCase = listPostsByAuthorUseCase;
 		this.createPostUseCase = createPostUseCase;
 		this.updatePostUseCase = updatePostUseCase;
 		this.deletePostByIdUseCase = deletePostByIdUseCase;
@@ -80,7 +84,8 @@ public class PostController {
 
 	@GetMapping
 	public ResponseEntity<PageResult<PostResponse>> findAll(
-			@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+	) {
 		Sort.Order sortOrder = pageable.getSort().stream().findFirst()
 				.orElse(new Sort.Order(Sort.Direction.DESC, "createdAt"));
 		PaginationRequest paginationRequest = new PaginationRequest(
@@ -89,6 +94,30 @@ public class PostController {
 				sortOrder.getProperty(),
 				sortOrder.getDirection().name());
 		PageResult<Post> domainPage = listPostsUseCase.execute(paginationRequest);
+		PageResult<PostResponse> response = new PageResult<>(
+			domainPage.data().stream()
+					.map(x -> PostResponse.from(x))
+					.toList(),
+			domainPage.totalPages(),
+			domainPage.totalElements(),
+			domainPage.currentPage(),
+			domainPage.pageSize());
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/author/{username}")
+	public ResponseEntity<PageResult<PostResponse>> findPostsByAuthor(
+		@PathVariable String username,
+		@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+	) {
+		Sort.Order sortOrder = pageable.getSort().stream().findFirst()
+			.orElse(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+		PaginationRequest paginationRequest = new PaginationRequest(
+			pageable.getPageNumber(),
+			pageable.getPageSize(),
+			sortOrder.getProperty(),
+			sortOrder.getDirection().name());
+		PageResult<Post> domainPage = listPostsByAuthorUseCase.execute(username, paginationRequest);
 		PageResult<PostResponse> response = new PageResult<>(
 			domainPage.data().stream()
 					.map(x -> PostResponse.from(x))

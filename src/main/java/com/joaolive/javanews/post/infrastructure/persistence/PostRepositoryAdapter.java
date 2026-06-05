@@ -85,9 +85,41 @@ public class PostRepositoryAdapter implements PostRepository {
 	}
 
 	@Override
-	public List<Post> findPostsByAuthorId(UUID id) {
-		// TODO Unimplemented method 'findPostsByAuthorId'
-		return null;
+	public PageResult<Post> findByAuthorId(UUID id, PaginationRequest request) {
+		Sort.Direction direction = Sort.Direction.fromString(request.direction());
+		PageRequest pageable = PageRequest.of(
+			request.page(),
+			request.size(),
+			Sort.by(direction, request.sortBy())
+		);
+
+		Page<PostIdProjection> pagedIds = postRepository.findPagedIdsByAuthorId(id, pageable);
+		if (pagedIds.isEmpty()) {
+			return new PageResult<>(
+				List.of(),
+				pagedIds.getTotalPages(),
+				pagedIds.getTotalElements(),
+				pagedIds.getNumber(),
+				pagedIds.getSize()
+			);
+		}
+
+		List<UUID> idsToFetch = pagedIds.stream()
+			.map(x -> x.getId())
+			.toList();
+		List<PostEntity> unorderedEntities = postRepository.findWithTagsByIds(idsToFetch);
+		List<PostEntity> orderedEntities = BatchFetchAligner.align(pagedIds.getContent(), unorderedEntities);
+		List<Post> domainPosts = orderedEntities.stream()
+			.map(PostMapper::toDomain)
+			.toList();
+		
+		return new PageResult<>(
+			domainPosts,
+			pagedIds.getTotalPages(),
+			pagedIds.getTotalElements(),
+			pagedIds.getNumber(),
+			pagedIds.getSize()
+		);
 	}
 
 	@Override
