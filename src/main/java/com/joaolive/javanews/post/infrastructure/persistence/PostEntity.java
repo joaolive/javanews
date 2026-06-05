@@ -7,9 +7,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.joaolive.javanews.core.Identifiable;
+import com.joaolive.javanews.post.domain.valueobject.PostType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -28,6 +31,11 @@ import lombok.Setter;
 public class PostEntity implements Identifiable<UUID> {
 	@Id
 	private UUID	id;
+	@Column(name = "parent_id")
+	private UUID	parentId;
+	@Enumerated(EnumType.STRING)
+    @Column(name = "post_type", nullable = false)
+    private PostType type;
 	private String	title;
 	private String	slug;
 	@Column(columnDefinition = "TEXT")
@@ -46,9 +54,11 @@ public class PostEntity implements Identifiable<UUID> {
 		inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private Set<TagEntity>	tags = new HashSet<>();
 
-	public PostEntity(UUID id, String title, String slug, String body, UUID authorId, Instant createdAt,
+	public PostEntity(UUID id, UUID parentId, PostType type, String title, String slug, String body, UUID authorId, Instant createdAt,
 			Instant updatedAt) {
 		this.id = id;
+		this.parentId = parentId;
+		this.type = type;
 		this.title = title;
 		this.slug = slug;
 		this.body = body;
