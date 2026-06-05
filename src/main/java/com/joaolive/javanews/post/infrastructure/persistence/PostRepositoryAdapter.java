@@ -42,6 +42,11 @@ public class PostRepositoryAdapter implements PostRepository {
 	}
 
 	@Override
+	public Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug) {
+		return postRepository.findByAuthorIdAndSlug(authorId, slug).map(PostMapper::toDomain);
+    }
+
+	@Override
 	public PageResult<Post> findAll(PaginationRequest request) {
 		Sort.Direction direction = Sort.Direction.fromString(request.direction());
 		PageRequest pageable = PageRequest.of(

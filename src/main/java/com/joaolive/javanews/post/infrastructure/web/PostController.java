@@ -24,6 +24,7 @@ import com.joaolive.javanews.post.application.command.DeletePostCommand;
 import com.joaolive.javanews.post.application.usecase.CreatePostUseCase;
 import com.joaolive.javanews.post.application.usecase.DeletePostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostByIdUseCase;
+import com.joaolive.javanews.post.application.usecase.FindPostBySlugUseCase;
 import com.joaolive.javanews.post.application.usecase.ListPostsUseCase;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.infrastructure.web.request.CreatePostRequest;
@@ -35,16 +36,19 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/posts")
 public class PostController {
 	private final FindPostByIdUseCase findPostByIdUseCase;
+	private final FindPostBySlugUseCase findPostBySlugUseCase;
 	private final ListPostsUseCase listPostsUseCase;
 	private final CreatePostUseCase createPostUseCase;
 	private final DeletePostByIdUseCase deletePostByIdUseCase;
 
 	public PostController(
 			FindPostByIdUseCase findPostByIdUseCase,
+			FindPostBySlugUseCase findPostBySlugUseCase,
 			ListPostsUseCase listPostsUseCase,
 			CreatePostUseCase createPostUseCase,
 			DeletePostByIdUseCase deletePostByIdUseCase) {
 		this.findPostByIdUseCase = findPostByIdUseCase;
+		this.findPostBySlugUseCase = findPostBySlugUseCase;
 		this.listPostsUseCase = listPostsUseCase;
 		this.createPostUseCase = createPostUseCase;
 		this.deletePostByIdUseCase = deletePostByIdUseCase;
@@ -53,6 +57,16 @@ public class PostController {
 	@GetMapping("/{id}")
 	public ResponseEntity<PostResponse> findPostById(@PathVariable UUID id) {
 		Post post = findPostByIdUseCase.execute(id);
+		PostResponse response = PostResponse.from(post);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{username}/{slug}")
+	public ResponseEntity<PostResponse> findPostBySlug(
+		@PathVariable String username,
+		@PathVariable String slug
+	) {
+		Post post = findPostBySlugUseCase.execute(username, slug);
 		PostResponse response = PostResponse.from(post);
 		return ResponseEntity.ok(response);
 	}

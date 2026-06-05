@@ -13,4 +13,5 @@ public interface PostRepository {
 	PageResult<Post> findAll(PaginationRequest request);
 	List<Post> findPostsByAuthorId(UUID id);
 	void delete(UUID id);
+	Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug);
 }
