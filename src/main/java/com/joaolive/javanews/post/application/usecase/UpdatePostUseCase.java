@@ -31,7 +31,7 @@ public class UpdatePostUseCase {
 		Set<Tag> tags = command.tags().stream()
 			.map(x -> Tag.create(x))
 			.collect(Collectors.toSet());
-		post.updatePost(command.title(), command.body(), tags);
+		post.updateArticle(command.title(), command.body(), tags);
 		return postRepository.save(post);
 	}
 }

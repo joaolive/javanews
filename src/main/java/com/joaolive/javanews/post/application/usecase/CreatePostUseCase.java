@@ -34,7 +34,7 @@ public class CreatePostUseCase {
 		Set<Tag> tags = command.tags().stream()
 				.map(x -> Tag.create(x))
 				.collect(Collectors.toSet());
-		Post savedPost =  postRepository.save(Post.createPost(
+		Post savedPost =  postRepository.save(Post.createArticle(
 			title, slug, body, command.authorId(), tags
 		));
 		eventPublisher.publishEvent(new PostCreatedEvent(

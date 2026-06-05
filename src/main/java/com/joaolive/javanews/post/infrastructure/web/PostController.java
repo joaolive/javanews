@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
 import com.joaolive.javanews.post.application.command.DeletePostCommand;
+import com.joaolive.javanews.post.application.usecase.CreateCommentUseCase;
 import com.joaolive.javanews.post.application.usecase.CreatePostUseCase;
 import com.joaolive.javanews.post.application.usecase.DeletePostByIdUseCase;
 import com.joaolive.javanews.post.application.usecase.FindPostByIdUseCase;
@@ -29,6 +30,7 @@ import com.joaolive.javanews.post.application.usecase.ListPostsByAuthorUseCase;
 import com.joaolive.javanews.post.application.usecase.ListPostsUseCase;
 import com.joaolive.javanews.post.application.usecase.UpdatePostUseCase;
 import com.joaolive.javanews.post.domain.Post;
+import com.joaolive.javanews.post.infrastructure.web.request.CreateCommentRequest;
 import com.joaolive.javanews.post.infrastructure.web.request.CreatePostRequest;
 import com.joaolive.javanews.post.infrastructure.web.request.UpdatePostRequest;
 import com.joaolive.javanews.post.infrastructure.web.response.PostResponse;
@@ -45,6 +47,7 @@ public class PostController {
 	private final ListPostsUseCase listPostsUseCase;
 	private final ListPostsByAuthorUseCase listPostsByAuthorUseCase;
 	private final CreatePostUseCase createPostUseCase;
+	private final CreateCommentUseCase createCommentUseCase;
 	private final UpdatePostUseCase updatePostUseCase;
 	private final DeletePostByIdUseCase deletePostByIdUseCase;
 
@@ -54,6 +57,7 @@ public class PostController {
 			ListPostsUseCase listPostsUseCase,
 			ListPostsByAuthorUseCase listPostsByAuthorUseCase,
 			CreatePostUseCase createPostUseCase,
+			CreateCommentUseCase createCommentUseCase,
 			UpdatePostUseCase updatePostUseCase,
 			DeletePostByIdUseCase deletePostByIdUseCase) {
 		this.findPostByIdUseCase = findPostByIdUseCase;
@@ -61,6 +65,7 @@ public class PostController {
 		this.listPostsUseCase = listPostsUseCase;
 		this.listPostsByAuthorUseCase = listPostsByAuthorUseCase;
 		this.createPostUseCase = createPostUseCase;
+		this.createCommentUseCase = createCommentUseCase;
 		this.updatePostUseCase = updatePostUseCase;
 		this.deletePostByIdUseCase = deletePostByIdUseCase;
 	}
@@ -135,6 +140,19 @@ public class PostController {
 			@AuthenticationPrincipal Jwt jwt) {
 		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
 		Post post = createPostUseCase.execute(request.toCommand(authorId));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(post.getId()).toUri();
+		return ResponseEntity.created(uri).body(PostResponse.from(post));
+	}
+
+	@PostMapping("/{id}/comments")
+	public ResponseEntity<PostResponse> createComment(
+		@PathVariable UUID id,
+		@Valid @RequestBody CreateCommentRequest request,
+		@AuthenticationPrincipal Jwt jwt
+	) {
+		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
+		Post post = createCommentUseCase.execute(request.toCommand(id, requesterId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(post.getId()).toUri();
 		return ResponseEntity.created(uri).body(PostResponse.from(post));

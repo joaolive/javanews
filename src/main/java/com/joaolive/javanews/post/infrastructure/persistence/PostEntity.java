@@ -34,7 +34,7 @@ public class PostEntity implements Identifiable<UUID> {
 	@Column(name = "parent_id")
 	private UUID	parentId;
 	@Enumerated(EnumType.STRING)
-    @Column(name = "post_type", nullable = false)
+    @Column(name = "type", nullable = false)
     private PostType type;
 	private String	title;
 	private String	slug;

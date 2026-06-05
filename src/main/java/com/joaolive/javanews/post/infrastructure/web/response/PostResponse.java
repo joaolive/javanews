@@ -1,6 +1,7 @@
 package com.joaolive.javanews.post.infrastructure.web.response;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,9 +22,10 @@ public record PostResponse(
 	UUID authorId,
 	Instant createdAt,
 	Instant updatedAt,
-	Set<String> tags
+	Set<String> tags,
+	List<PostResponse> children
 ) {
-	public static PostResponse from(Post domain) {
+	public static PostResponse from(Post domain, List<PostResponse> children) {
 		return new PostResponse(
 			domain.getId(),
 			domain.getParentId(),
@@ -34,7 +36,12 @@ public record PostResponse(
 			domain.getAuthorId(),
 			domain.getCreatedAt(),
 			domain.getUpdatedAt(),
-			domain.getTags().stream().map(x -> x.value()).collect(Collectors.toSet())
+			domain.getTags().stream().map(x -> x.value()).collect(Collectors.toSet()),
+			children
 		);
+	}
+
+	public static PostResponse from(Post domain) {
+		return from(domain, List.of());
 	}
 }
