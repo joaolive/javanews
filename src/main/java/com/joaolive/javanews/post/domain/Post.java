@@ -3,6 +3,7 @@ package com.joaolive.javanews.post.domain;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -82,12 +83,12 @@ public class Post {
 		return type;
 	}
 
-	public Title getTitle() {
-		return title;
+	public Optional<Title> getTitle() { 
+		return Optional.ofNullable(title); 
 	}
 
-	public Slug getSlug() {
-		return slug;
+	public Optional<Slug> getSlug() { 
+		return Optional.ofNullable(slug); 
 	}
 
 	public Body getBody() {
@@ -108,6 +109,14 @@ public class Post {
 
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(this.tags);
+	}
+
+	public boolean isComment() {
+		return this.type == PostType.COMMENT;
+	}
+
+	public boolean isArticle() {
+		return this.type == PostType.ARTICLE;
 	}
 
 	public void addTag(Tag tag) {
