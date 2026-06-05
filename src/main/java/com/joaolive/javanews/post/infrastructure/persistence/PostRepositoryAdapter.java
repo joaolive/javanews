@@ -32,7 +32,7 @@ public class PostRepositoryAdapter implements PostRepository {
 		Set<String> tagNames = post.getTags().stream().map(x -> x.value()).collect(Collectors.toSet());
 		Set<TagEntity> tagEntities = tagRepository.findByNameIn(tagNames);
 		PostEntity entity = PostMapper.toEntity(post, tagEntities);
-		postRepository.save(entity);
+		entity = postRepository.save(entity);
 		return PostMapper.toDomain(entity);
 	}
 
