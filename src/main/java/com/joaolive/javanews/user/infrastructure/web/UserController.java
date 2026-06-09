@@ -4,13 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.joaolive.javanews.user.application.usecase.CheckEmailAvailabilityUseCase;
-import com.joaolive.javanews.user.application.usecase.CheckUsernameAvailabilityUseCase;
-import com.joaolive.javanews.user.application.usecase.CreateUserUseCase;
-import com.joaolive.javanews.user.application.usecase.FindUserByIdUseCase;
+import com.joaolive.javanews.user.application.UserService;
+import com.joaolive.javanews.user.application.UserQueryService;
 import com.joaolive.javanews.user.domain.User;
-import com.joaolive.javanews.user.infrastructure.web.request.CreateUserRequest;
-import com.joaolive.javanews.user.infrastructure.web.response.UserResponse;
 
 import java.net.URI;
 import java.util.UUID;
@@ -26,39 +22,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-	private final FindUserByIdUseCase findUserByIdUseCase;
-	private final CheckEmailAvailabilityUseCase checkEmailAvailabilityUseCase;
-	private final CheckUsernameAvailabilityUseCase checkUsernameAvailabilityUseCase;
-	private final CreateUserUseCase createUserUseCase;
+	private final UserQueryService userQueryService;
+	private final UserService userService;
 
-	public UserController(FindUserByIdUseCase findUserByIdUseCase,
-			CheckEmailAvailabilityUseCase checkEmailAvailabilityUseCase,
-			CheckUsernameAvailabilityUseCase checkUsernameAvailabilityUseCase, CreateUserUseCase createUserUseCase) {
-		this.findUserByIdUseCase = findUserByIdUseCase;
-		this.checkEmailAvailabilityUseCase = checkEmailAvailabilityUseCase;
-		this.checkUsernameAvailabilityUseCase = checkUsernameAvailabilityUseCase;
-		this.createUserUseCase = createUserUseCase;
+	public UserController(UserQueryService userQueryService, UserService userService) {
+		this.userQueryService = userQueryService;
+		this.userService = userService;
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserResponse> findUserById(@PathVariable UUID id) {
-		User user = findUserByIdUseCase.execute(id);
+	public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
+		User user = userQueryService.findById(id);
 		UserResponse response = UserResponse.from(user);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/check-email")
 	public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam String email) {
-		return ResponseEntity.ok(checkEmailAvailabilityUseCase.execute(email));
+		return ResponseEntity.ok(userQueryService.checkEmailAvailability(email));
 	}
 	@GetMapping("/check-username")
 	public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam String username) {
-		return ResponseEntity.ok(checkUsernameAvailabilityUseCase.execute(username));
+		return ResponseEntity.ok(userQueryService.checkUsernameAvailability(username));
 	}
 	
 	@PostMapping
 	public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
-		User user = createUserUseCase.execute(request.toCommand());
+		User user = userService.create(request.toCommand());
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).body(UserResponse.from(user));

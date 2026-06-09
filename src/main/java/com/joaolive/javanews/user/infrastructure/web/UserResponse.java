@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.web.response;
+package com.joaolive.javanews.user.infrastructure.web;
 
 import java.time.Instant;
 import java.util.UUID;

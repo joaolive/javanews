@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.web.request;
+package com.joaolive.javanews.post.infrastructure.web;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.application.usecase;
+package com.joaolive.javanews.user.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +13,15 @@ import com.joaolive.javanews.user.domain.valueobject.Name;
 import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Service
-public class CreateUserUseCase {
+public class UserService {
 	private final UserRepository userRepository;
 
-	public CreateUserUseCase(UserRepository userRepository) {
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
 	@Transactional
-	public User execute(CreateUserCommand command) {
+	public User create(CreateUserCommand command) {
 		Email email = Email.create(command.email());
 		Username username = Username.create(command.username());
 		Name firstName = Name.create(command.firstName());

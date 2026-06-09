@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.infrastructure.web.response;
+package com.joaolive.javanews.post.infrastructure.web;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.infrastructure.web.request;
+package com.joaolive.javanews.user.infrastructure.web;
 
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
 
