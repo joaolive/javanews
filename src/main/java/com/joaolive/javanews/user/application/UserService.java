@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
-import com.joaolive.javanews.user.domain.exception.UserForbiddenException;
+import com.joaolive.javanews.user.domain.exception.UserConflictException;
 import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;
@@ -28,9 +28,9 @@ public class UserService {
 		Name lastName = Name.create(command.lastName());
 		Bio bio = Bio.create(command.bio());
 		if (userRepository.existsByUsername(username))
-			throw new UserForbiddenException("Username is already in use");
+			throw new UserConflictException("Username is already in use");
 		if (userRepository.existsByEmail(email))
-			throw new UserForbiddenException("Email is already in use");
+			throw new UserConflictException("Email is already in use");
 		User user = User.createUser(email, username, command.password(), firstName, lastName, bio, command.avatarKey());
 		userRepository.save(user);
 		return user;

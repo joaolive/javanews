@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.joaolive.javanews.core.BaseConflictException;
 import com.joaolive.javanews.core.BaseForbiddenException;
 import com.joaolive.javanews.core.BaseNotFoundException;
 import com.joaolive.javanews.core.BaseValidationException;
@@ -42,6 +43,15 @@ public class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
 		problemDetail.setTitle("Access Forbidden");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/forbidden"));
+		problemDetail.setProperty("timestamp", Instant.now());
+		return problemDetail;
+	}
+
+	@ExceptionHandler(BaseConflictException.class)
+	public ProblemDetail handleConflictException(BaseConflictException ex) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+		problemDetail.setTitle("Resource Conflict");
+		problemDetail.setType(URI.create("https://api.javanews.com/errors/conflict"));
 		problemDetail.setProperty("timestamp", Instant.now());
 		return problemDetail;
 	}
