@@ -44,7 +44,7 @@ public class PostRepositoryAdapter implements PostRepository {
 	@Override
 	public Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug) {
 		return postRepository.findByAuthorIdAndSlug(authorId, slug).map(PostMapper::toDomain);
-    }
+	}
 
 	@Override
 	public PageResult<Post> findAll(PaginationRequest request) {
@@ -71,17 +71,15 @@ public class PostRepositoryAdapter implements PostRepository {
 			.toList();
 		List<PostEntity> unorderedEntities = postRepository.findWithTagsByIds(idsToFetch);
 		List<PostEntity> orderedEntities = BatchFetchAligner.align(pagedIds.getContent(), unorderedEntities);
-		List<Post> domainPosts = orderedEntities.stream()
-			.map(PostMapper::toDomain)
-			.toList();
 
-		return new PageResult<>(
-			domainPosts,
+		PageResult<PostEntity> entityPaged = new PageResult<>(
+			orderedEntities,
 			pagedIds.getTotalPages(),
 			pagedIds.getTotalElements(),
 			pagedIds.getNumber(),
 			pagedIds.getSize()
 		);
+		return entityPaged.map(PostMapper::toDomain);
 	}
 
 	@Override

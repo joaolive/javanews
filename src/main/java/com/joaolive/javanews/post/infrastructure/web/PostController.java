@@ -99,14 +99,7 @@ public class PostController {
 				sortOrder.getProperty(),
 				sortOrder.getDirection().name());
 		PageResult<Post> domainPage = listPostsUseCase.execute(paginationRequest);
-		PageResult<PostResponse> response = new PageResult<>(
-			domainPage.data().stream()
-					.map(x -> PostResponse.from(x))
-					.toList(),
-			domainPage.totalPages(),
-			domainPage.totalElements(),
-			domainPage.currentPage(),
-			domainPage.pageSize());
+		PageResult<PostResponse> response = domainPage.map(PostResponse::from);
 		return ResponseEntity.ok(response);
 	}
 
