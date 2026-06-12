@@ -10,13 +10,15 @@ public abstract sealed class Post permits Article, Comment {
 	protected final UUID	id;
 	protected Body			body;
 	protected UUID			authorId;
+	protected final String	author;
 	protected final Instant	createdAt;
 	protected Instant		updatedAt;
 	
-	protected Post(UUID id, Body body, UUID authorId, Instant createdAt, Instant updatedAt) {
+	protected Post(UUID id, Body body, UUID authorId, String author, Instant createdAt, Instant updatedAt) {
 		this.id = id;
 		this.body = body;
 		this.authorId = authorId;
+		this.author = author;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -31,6 +33,10 @@ public abstract sealed class Post permits Article, Comment {
 
 	public UUID getAuthorId() {
 		return authorId;
+	}
+
+	public String getAuthor() {
+		return author;
 	}
 
 	public Instant getCreatedAt() {

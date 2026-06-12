@@ -41,6 +41,7 @@ public class PostService {
 			Slug.create(command.title()),
 			Body.create(command.body()),
 			command.authorId(),
+			command.author(),
 			command.tags().stream()
 				.map(Tag::create)
 				.collect(Collectors.toSet())));
@@ -57,7 +58,7 @@ public class PostService {
 	public Comment createComment(CreateCommentCommand command) {
 		postRepository.findById(command.parentId())
 			.orElseThrow(() -> new PostNotFoundException("Post not found"));
-		Comment comment = Comment.create(Body.create(command.body()), command.authorId(), command.parentId());
+		Comment comment = Comment.create(Body.create(command.body()), command.authorId(), command.author(), command.parentId());
 		return postRepository.save(comment);
 	}
 

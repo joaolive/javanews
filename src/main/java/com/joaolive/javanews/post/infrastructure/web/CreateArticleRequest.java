@@ -17,11 +17,12 @@ public record CreateArticleRequest(
 	String body,
 	Set<String> tags
 ) {
-	public CreateArticleCommand toCommand(UUID authorId) {
+	public CreateArticleCommand toCommand(UUID authorId, String author) {
 		return new CreateArticleCommand(
 			this.title(),
 			this.body(),
 			authorId,
+			author,
 			this.tags()
 		);
 	}

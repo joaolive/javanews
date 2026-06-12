@@ -42,6 +42,7 @@ public class PostEntity implements Identifiable<UUID> {
 	private String	body;
 	@Column(name = "author_id")
 	private UUID	authorId;
+	private String	author;
 	private Instant	createdAt;
 	private Instant	updatedAt;
 
@@ -54,7 +55,7 @@ public class PostEntity implements Identifiable<UUID> {
 		inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private Set<TagEntity>	tags = new HashSet<>();
 
-	public PostEntity(UUID id, UUID parentId, PostType type, String title, String slug, String body, UUID authorId, Instant createdAt,
+	public PostEntity(UUID id, UUID parentId, PostType type, String title, String slug, String body, UUID authorId, String author, Instant createdAt,
 			Instant updatedAt) {
 		this.id = id;
 		this.parentId = parentId;
@@ -63,6 +64,7 @@ public class PostEntity implements Identifiable<UUID> {
 		this.slug = slug;
 		this.body = body;
 		this.authorId = authorId;
+		this.author = author;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}

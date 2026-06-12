@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.joaolive.javanews.core.CurrentUser;
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
+import com.joaolive.javanews.core.UserContext;
 import com.joaolive.javanews.post.application.PostService;
 import com.joaolive.javanews.post.application.PostQueryService;
 import com.joaolive.javanews.post.application.command.DeletePostCommand;
@@ -77,14 +78,7 @@ public class PostController {
 			sortOrder.getProperty(),
 			sortOrder.getDirection().name());
 		PageResult<Post> domainPage = postQueryService.findPostsByAuthor(username, paginationRequest);
-		PageResult<PostResponse> response = new PageResult<>(
-			domainPage.data().stream()
-					.map(x -> PostResponse.from(x))
-					.toList(),
-			domainPage.totalPages(),
-			domainPage.totalElements(),
-			domainPage.currentPage(),
-			domainPage.pageSize());
+		PageResult<PostResponse> response = domainPage.map(PostResponse::from);
 		return ResponseEntity.ok(response);
 	}
 
@@ -101,8 +95,8 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostResponse> createArticle(
 			@Valid @RequestBody CreateArticleRequest request,
-			@CurrentUser UUID authorId) {
-		Article article = postService.createArticle(request.toCommand(authorId));
+			@CurrentUser UserContext author) {
+		Article article = postService.createArticle(request.toCommand(author.id(), author.username()));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(article.getId()).toUri();
 		return ResponseEntity.created(uri).body(PostResponse.from(article));
@@ -112,9 +106,9 @@ public class PostController {
 	public ResponseEntity<PostResponse> createComment(
 		@PathVariable UUID id,
 		@Valid @RequestBody CreateCommentRequest request,
-		@CurrentUser UUID requesterId
+		@CurrentUser UserContext requester
 	) {
-		Comment comment = postService.createComment(request.toCommand(id, requesterId));
+		Comment comment = postService.createComment(request.toCommand(id, requester.id(), requester.username()));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(comment.getId()).toUri();
 		return ResponseEntity.created(uri).body(PostResponse.from(comment));
@@ -124,15 +118,15 @@ public class PostController {
 	public ResponseEntity<PostResponse> updateArticle(
 		@PathVariable UUID id,
 		@Valid @RequestBody UpdateArticleRequest request,
-		@CurrentUser UUID requesterId
+		@CurrentUser UserContext requester
 	) {
-		Article article = postService.updateArticle(id, requesterId, request.toCommand());
+		Article article = postService.updateArticle(id, requester.id(), request.toCommand());
 		return ResponseEntity.ok(PostResponse.from(article));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletePostById(@PathVariable UUID id, @CurrentUser UUID authorId) {
-		DeletePostCommand command = new DeletePostCommand(id, authorId);
+	public ResponseEntity<Void> deletePostById(@PathVariable UUID id, @CurrentUser UserContext author) {
+		DeletePostCommand command = new DeletePostCommand(id, author.id());
 		postService.delete(command);
 		return ResponseEntity.noContent().build();
 	}

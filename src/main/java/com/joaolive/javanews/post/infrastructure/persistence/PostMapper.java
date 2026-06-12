@@ -18,6 +18,7 @@ public static PostEntity toEntity(Post domain, Set<TagEntity> tagEntities) {
 		entity.setId(domain.getId());
 		entity.setBody(domain.getBody().value());
 		entity.setAuthorId(domain.getAuthorId());
+		entity.setAuthor(domain.getAuthor());
 		entity.setCreatedAt(domain.getCreatedAt());
 		entity.setUpdatedAt(domain.getUpdatedAt());
 		entity.setType(domain.getType());
@@ -45,6 +46,7 @@ public static PostEntity toEntity(Post domain, Set<TagEntity> tagEntities) {
 				entity.getSlug(),
 				entity.getBody(),
 				entity.getAuthorId(),
+				entity.getAuthor(),
 				entity.getCreatedAt(),
 				entity.getUpdatedAt(),
 				entity.getTags().stream()
@@ -55,6 +57,7 @@ public static PostEntity toEntity(Post domain, Set<TagEntity> tagEntities) {
 				entity.getId(),
 				entity.getBody(),
 				entity.getAuthorId(),
+				entity.getAuthor(),
 				entity.getCreatedAt(),
 				entity.getUpdatedAt(),
 				entity.getParentId()
