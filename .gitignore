@@ -61,4 +61,9 @@ build/
 hs_err_pid*
 replay_pid*
 
+# Security RSA Keys
+*.pem
+private.pem
+public.pem
+
 # End of https://www.toptal.com/developers/gitignore/api/java

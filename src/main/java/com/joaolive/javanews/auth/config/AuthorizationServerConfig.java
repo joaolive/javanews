@@ -7,7 +7,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,11 +56,23 @@ public class AuthorizationServerConfig {
 	@Value("${security.jwt.duration}")
 	private Integer jwtDurationSeconds;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+	@Value("${security.rsa.private-key}")
+	private RSAPrivateKey privateKey;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	@Value("${security.rsa.public-key}")
+	private RSAPublicKey publicKey;
+
+	@Value("${security.rsa.key-id}")
+	private String rsaKeyId;
+
+	private final UserDetailsService userDetailsService;
+
+	private final PasswordEncoder passwordEncoder;
+
+	public AuthorizationServerConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+		this.userDetailsService = userDetailsService;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Bean
 	@Order(2)
@@ -166,27 +177,12 @@ public class AuthorizationServerConfig {
 
 	@Bean
 	JWKSource<SecurityContext> jwkSource() {
-		RSAKey rsaKey = generateRsa();
+		RSAKey rsaKey = new RSAKey.Builder(this.publicKey)
+			.privateKey(this.privateKey)
+			.keyID(this.rsaKeyId)
+			.build();
 		JWKSet jwkSet = new JWKSet(rsaKey);
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 	}
 
-	private static RSAKey generateRsa() {
-		KeyPair keyPair = generateRsaKey();
-		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString()).build();
-	}
-
-	private static KeyPair generateRsaKey() {
-		KeyPair keyPair;
-		try {
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(2048);
-			keyPair = keyPairGenerator.generateKeyPair();
-		} catch (Exception ex) {
-			throw new IllegalStateException(ex);
-		}
-		return keyPair;
-	}
 }
