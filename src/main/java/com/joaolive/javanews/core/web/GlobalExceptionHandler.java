@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.joaolive.javanews.core.BaseConflictException;
 import com.joaolive.javanews.core.BaseForbiddenException;
 import com.joaolive.javanews.core.BaseNotFoundException;
+import com.joaolive.javanews.core.BaseUnauthorizedException;
 import com.joaolive.javanews.core.BaseValidationException;
 
 @RestControllerAdvice
@@ -25,6 +26,15 @@ public class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
 		problemDetail.setTitle("Domain Validation Error");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/domain-validation"));
+		problemDetail.setProperty("timestamp", Instant.now());
+		return problemDetail;
+	}
+
+	@ExceptionHandler(BaseUnauthorizedException.class)
+	public ProblemDetail handleUnauthorizedException(BaseUnauthorizedException ex) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+		problemDetail.setTitle("Unauthorized / Unauthenticated");
+		problemDetail.setType(URI.create("https://api.javanews.com/errors/unauthorized"));
 		problemDetail.setProperty("timestamp", Instant.now());
 		return problemDetail;
 	}
@@ -78,6 +88,19 @@ public class GlobalExceptionHandler {
 		problemDetail.setTitle("Bad Request");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/bad-request"));
 		problemDetail.setProperty("invalid_fields", errors);
+		problemDetail.setProperty("timestamp", Instant.now());
+		return problemDetail;
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ProblemDetail handleUncaughtException(Exception ex) {
+		ex.printStackTrace(); 
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+				HttpStatus.INTERNAL_SERVER_ERROR, 
+				"An unexpected internal server error occurred."
+		);
+		problemDetail.setTitle("Internal Server Error");
+		problemDetail.setType(URI.create("https://api.javanews.com/errors/internal-server-error"));
 		problemDetail.setProperty("timestamp", Instant.now());
 		return problemDetail;
 	}

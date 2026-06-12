@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.joaolive.javanews.core.CurrentUser;
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
 import com.joaolive.javanews.post.application.PostService;
@@ -102,8 +101,7 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostResponse> createArticle(
 			@Valid @RequestBody CreateArticleRequest request,
-			@AuthenticationPrincipal Jwt jwt) {
-		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
+			@CurrentUser UUID authorId) {
 		Article article = postService.createArticle(request.toCommand(authorId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(article.getId()).toUri();
@@ -114,9 +112,8 @@ public class PostController {
 	public ResponseEntity<PostResponse> createComment(
 		@PathVariable UUID id,
 		@Valid @RequestBody CreateCommentRequest request,
-		@AuthenticationPrincipal Jwt jwt
+		@CurrentUser UUID requesterId
 	) {
-		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
 		Comment comment = postService.createComment(request.toCommand(id, requesterId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(comment.getId()).toUri();
@@ -127,18 +124,14 @@ public class PostController {
 	public ResponseEntity<PostResponse> updateArticle(
 		@PathVariable UUID id,
 		@Valid @RequestBody UpdateArticleRequest request,
-		@AuthenticationPrincipal Jwt jwt
+		@CurrentUser UUID requesterId
 	) {
-		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
 		Article article = postService.updateArticle(id, requesterId, request.toCommand());
 		return ResponseEntity.ok(PostResponse.from(article));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletePostById(
-			@PathVariable UUID id,
-			@AuthenticationPrincipal Jwt jwt) {
-		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
+	public ResponseEntity<Void> deletePostById(@PathVariable UUID id, @CurrentUser UUID authorId) {
 		DeletePostCommand command = new DeletePostCommand(id, authorId);
 		postService.delete(command);
 		return ResponseEntity.noContent().build();
