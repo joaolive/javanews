@@ -2,9 +2,11 @@ package com.joaolive.javanews.user.application;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joaolive.javanews.user.UserUsernameChangeEvent;
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
 import com.joaolive.javanews.user.application.command.UpdateProfileCommand;
 import com.joaolive.javanews.user.domain.User;
@@ -18,9 +20,11 @@ import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Service
 public class UserService {
+	private final ApplicationEventPublisher publisher;
 	private final UserRepository userRepository;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(ApplicationEventPublisher publisher, UserRepository userRepository) {
+		this.publisher = publisher;
 		this.userRepository = userRepository;
 	}
 
@@ -49,5 +53,20 @@ public class UserService {
 			Bio.create(command.bio()),
 			command.avatarKey());
 		return userRepository.save(user);
+	}
+
+	@Transactional
+	public User updateUsername(UUID id, String newUsername) {
+		Username username = Username.create(newUsername);
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		if (user.getUsername().equals(username))
+			return user;
+		if (userRepository.existsByUsername(username))
+			throw new UserConflictException("Username is already in use");
+		user.updateUsername(username);
+		user = userRepository.save(user);
+		publisher.publishEvent(new UserUsernameChangeEvent(id, username.getValue()));
+		return user;
 	}
 }

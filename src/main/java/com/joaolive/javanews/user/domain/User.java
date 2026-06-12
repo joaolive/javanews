@@ -57,6 +57,11 @@ public class User {
 		updatedAt = Instant.now();
 	}
 
+	public void updateUsername(Username username) {
+		this.username = username;
+		updatedAt = Instant.now();
+	}
+
 	public UUID getId() {
 		return id;
 	}

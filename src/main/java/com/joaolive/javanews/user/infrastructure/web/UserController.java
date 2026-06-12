@@ -67,4 +67,13 @@ public class UserController {
 		User user = userService.updateProfile(requester.id(), request.toCommand());
 		return ResponseEntity.ok(UserResponse.from(user));
 	}
+
+	@PutMapping("/me/username")
+	public ResponseEntity<UserResponse> updateUsername(
+		@CurrentUser UserContext requester,
+		@Valid @RequestBody UpdateUsernameRequest request
+	) {
+		User user = userService.updateUsername(requester.id(), request.username());
+		return ResponseEntity.ok(UserResponse.from(user));
+	}
 }
