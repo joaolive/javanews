@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,4 +26,8 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
 
 	@EntityGraph(attributePaths = {"tags"})
 	Optional<PostEntity> findByAuthorIdAndSlugAndType(UUID authorId, String slug, PostType type);
+
+	@Modifying
+	@Query("UPDATE PostEntity p SET p.authorUsername = :newUsername WHERE p.authorId = :authorId")
+	void updateAuthorUsername(@Param("authorId") UUID authorId, @Param("newUsername") String newUsername);
 }
