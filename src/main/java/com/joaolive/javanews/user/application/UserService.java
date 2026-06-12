@@ -1,12 +1,16 @@
 package com.joaolive.javanews.user.application;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
+import com.joaolive.javanews.user.application.command.UpdateProfileCommand;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.exception.UserConflictException;
+import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
 import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Name;
@@ -32,7 +36,18 @@ public class UserService {
 		if (userRepository.existsByEmail(email))
 			throw new UserConflictException("Email is already in use");
 		User user = User.createUser(email, username, command.password(), firstName, lastName, bio, command.avatarKey());
-		userRepository.save(user);
-		return user;
+		return userRepository.save(user);
+	}
+
+	@Transactional
+	public User updateProfile(UUID id, UpdateProfileCommand command) {
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		user.updateUser(Name.create(
+			command.firstName()),
+			Name.create(command.lastName()),
+			Bio.create(command.bio()),
+			command.avatarKey());
+		return userRepository.save(user);
 	}
 }

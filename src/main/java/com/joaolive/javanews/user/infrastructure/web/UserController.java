@@ -5,8 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.joaolive.javanews.user.application.UserService;
+import com.joaolive.javanews.core.CurrentUser;
+import com.joaolive.javanews.core.UserContext;
 import com.joaolive.javanews.user.application.UserQueryService;
 import com.joaolive.javanews.user.domain.User;
+
+import jakarta.validation.Valid;
 
 import java.net.URI;
 import java.util.UUID;
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -52,5 +57,14 @@ public class UserController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).body(UserResponse.from(user));
+	}
+
+	@PutMapping("/me/profile")
+	public ResponseEntity<UserResponse> updateProfile(
+		@CurrentUser UserContext requester,
+		@Valid @RequestBody UpdateProfileRequest request
+	) {
+		User user = userService.updateProfile(requester.id(), request.toCommand());
+		return ResponseEntity.ok(UserResponse.from(user));
 	}
 }

@@ -19,8 +19,9 @@ public class UserRepositoryAdapter implements UserRepository {
 	}
 
 	@Override
-	public void save(User user) {
-		userRepository.save(UserMapper.toEntity(user));
+	public User save(User user) {
+		UserEntity entity = userRepository.save(UserMapper.toEntity(user));
+		return UserMapper.toDomain(entity);
 	}
 
 	@Override

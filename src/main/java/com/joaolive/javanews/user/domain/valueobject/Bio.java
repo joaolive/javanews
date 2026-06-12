@@ -8,8 +8,8 @@ public class Bio {
 	}
 
 	public static Bio create(String value) {
-		if (value != null && value.length() > 500)
-			throw new IllegalArgumentException("Bio cannot exceed 500 characters");
+		if (value != null && value.length() > 160)
+			throw new IllegalArgumentException("Bio cannot exceed 160 characters");
 		return new Bio(value);
 	}
 
