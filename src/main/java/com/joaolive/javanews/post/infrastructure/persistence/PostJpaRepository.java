@@ -11,9 +11,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.joaolive.javanews.post.domain.valueobject.PostType;
+
 public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
-	@Query("SELECT p.id as id FROM PostEntity p")
-	Page<PostIdProjection> findPagedIds(Pageable pageable);
+	@Query("SELECT p.id as id FROM PostEntity p WHERE p.type = :type")
+	Page<PostIdProjection> findPagedIds(@Param("type") PostType type, Pageable pageable);
 
 	@Query("SELECT p.id as id FROM PostEntity p WHERE p.authorId = :authorId")
 	Page<PostIdProjection> findPagedIdsByAuthorId(@Param("authorId") UUID authorId, Pageable pageable);
@@ -22,5 +24,5 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
 	List<PostEntity> findWithTagsByIds(@Param("ids") List<UUID> ids);
 
 	@EntityGraph(attributePaths = {"tags"})
-    Optional<PostEntity> findByAuthorIdAndSlug(UUID authorId, String slug);
+	Optional<PostEntity> findByAuthorIdAndSlugAndType(UUID authorId, String slug, PostType type);
 }

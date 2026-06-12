@@ -7,10 +7,10 @@ import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
 
 public interface PostRepository {
-	Post save(Post post);
+	<T extends Post>T save(T post);
 	Optional<Post> findById(UUID id);
-	PageResult<Post> findAll(PaginationRequest request);
+	PageResult<Article> findAllArticles(PaginationRequest request);
 	PageResult<Post> findByAuthorId(UUID id, PaginationRequest request);
 	void delete(UUID id);
-	Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug);
+	Optional<Article> findByAuthorIdAndSlug(UUID authorId, String slug);
 }

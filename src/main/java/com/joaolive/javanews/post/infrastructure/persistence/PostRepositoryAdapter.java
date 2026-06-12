@@ -1,5 +1,6 @@
 package com.joaolive.javanews.post.infrastructure.persistence;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Repository;
 import com.joaolive.javanews.core.BatchFetchAligner;
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
+import com.joaolive.javanews.post.domain.Article;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.domain.PostRepository;
+import com.joaolive.javanews.post.domain.valueobject.PostType;
 
 @Repository
 public class PostRepositoryAdapter implements PostRepository {
@@ -28,26 +31,17 @@ public class PostRepositoryAdapter implements PostRepository {
 	}
 
 	@Override
-	public Post save(Post post) {
-		Set<String> tagNames = post.getTags().stream().map(x -> x.value()).collect(Collectors.toSet());
-		Set<TagEntity> tagEntities = tagRepository.findByNameIn(tagNames);
-		PostEntity entity = PostMapper.toEntity(post, tagEntities);
-		entity = postRepository.save(entity);
-		return PostMapper.toDomain(entity);
-	}
-
-	@Override
 	public Optional<Post> findById(UUID id) {
 		return postRepository.findById(id).map(PostMapper::toDomain);
 	}
 
 	@Override
-	public Optional<Post> findByAuthorIdAndSlug(UUID authorId, String slug) {
-		return postRepository.findByAuthorIdAndSlug(authorId, slug).map(PostMapper::toDomain);
+	public Optional<Article> findByAuthorIdAndSlug(UUID authorId, String slug) {
+		return postRepository.findByAuthorIdAndSlugAndType(authorId, slug, PostType.ARTICLE).map(PostMapper::toDomain).map(x -> (Article)x);
 	}
 
 	@Override
-	public PageResult<Post> findAll(PaginationRequest request) {
+	public PageResult<Article> findAllArticles(PaginationRequest request) {
 		Sort.Direction direction = Sort.Direction.fromString(request.direction());
 		PageRequest pageable = PageRequest.of(
 			request.page(),
@@ -55,7 +49,7 @@ public class PostRepositoryAdapter implements PostRepository {
 			Sort.by(direction, request.sortBy())
 		);
 
-		Page<PostIdProjection> pagedIds = postRepository.findPagedIds(pageable);
+		Page<PostIdProjection> pagedIds = postRepository.findPagedIds(PostType.ARTICLE, pageable);
 		if (pagedIds.isEmpty()) {
 			return new PageResult<>(
 				List.of(),
@@ -79,7 +73,7 @@ public class PostRepositoryAdapter implements PostRepository {
 			pagedIds.getNumber(),
 			pagedIds.getSize()
 		);
-		return entityPaged.map(PostMapper::toDomain);
+		return entityPaged.map(PostMapper::toDomain).map(x -> (Article)x);
 	}
 
 	@Override
@@ -118,6 +112,19 @@ public class PostRepositoryAdapter implements PostRepository {
 			pagedIds.getNumber(),
 			pagedIds.getSize()
 		);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends Post> T save(T post) {
+		Set<TagEntity> tagEntities = new HashSet<>();
+		if (post instanceof Article article && !article.getTags().isEmpty()) {
+			Set<String> tagNames = article.getTags().stream().map(x -> x.value()).collect(Collectors.toSet());
+			tagEntities = tagRepository.findByNameIn(tagNames);
+		}
+		PostEntity entity = PostMapper.toEntity(post, tagEntities);
+		entity = postRepository.save(entity);
+		return (T)PostMapper.toDomain(entity);
 	}
 
 	@Override

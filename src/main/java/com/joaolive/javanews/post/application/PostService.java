@@ -1,6 +1,5 @@
 package com.joaolive.javanews.post.application;
 
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -9,12 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.post.PostCreatedEvent;
+import com.joaolive.javanews.post.application.command.CreateArticleCommand;
 import com.joaolive.javanews.post.application.command.CreateCommentCommand;
-import com.joaolive.javanews.post.application.command.CreatePostCommand;
 import com.joaolive.javanews.post.application.command.DeletePostCommand;
-import com.joaolive.javanews.post.application.command.UpdatePostCommand;
+import com.joaolive.javanews.post.application.command.UpdateArticleCommand;
+import com.joaolive.javanews.post.domain.Article;
+import com.joaolive.javanews.post.domain.Comment;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.domain.PostRepository;
+import com.joaolive.javanews.post.domain.exception.PostConflictException;
 import com.joaolive.javanews.post.domain.exception.PostForbiddenException;
 import com.joaolive.javanews.post.domain.exception.PostNotFoundException;
 import com.joaolive.javanews.post.domain.valueobject.Body;
@@ -33,45 +35,47 @@ public class PostService {
 	}
 
 	@Transactional
-	public Post createArticle(CreatePostCommand command) {
-		Title title = Title.create(command.title());
-		Slug slug = Slug.create(command.title());
-		Body body = Body.create(command.body());
-		Set<Tag> tags = command.tags().stream()
-				.map(x -> Tag.create(x))
-				.collect(Collectors.toSet());
-		Post savedPost =  postRepository.save(Post.createArticle(
-			title, slug, body, command.authorId(), tags
-		));
+	public Article createArticle(CreateArticleCommand command) {
+		Article article = postRepository.save(Article.create(
+			Title.create(command.title()),
+			Slug.create(command.title()),
+			Body.create(command.body()),
+			command.authorId(),
+			command.tags().stream()
+				.map(Tag::create)
+				.collect(Collectors.toSet())));
 		eventPublisher.publishEvent(new PostCreatedEvent(
-			savedPost.getId(),
-			savedPost.getAuthorId(),
-			savedPost.getTags().stream()
-				.map(x -> x.value())
-				.collect(Collectors.toSet())
-		));
-		return savedPost;
+			article.getId(),
+			article.getAuthorId(),
+			article.getTags().stream()
+				.map(Tag::value)
+				.collect(Collectors.toSet())));
+		return article;
 	}
 
 	@Transactional
-	public Post createComment(CreateCommentCommand command) {
+	public Comment createComment(CreateCommentCommand command) {
 		postRepository.findById(command.parentId())
 			.orElseThrow(() -> new PostNotFoundException("Post not found"));
-		Post comment = Post.createComment(command.parentId(), Body.create(command.body()), command.authorId());
+		Comment comment = Comment.create(Body.create(command.body()), command.authorId(), command.parentId());
 		return postRepository.save(comment);
 	}
 
 	@Transactional
-	public Post updateArticle(UUID articleId, UUID requesterId, UpdatePostCommand command) {
+	public Article updateArticle(UUID articleId, UUID requesterId, UpdateArticleCommand command) {
 		Post post = postRepository.findById(articleId)
 			.orElseThrow(() -> new PostNotFoundException("Post not found"));
 		if (!post.getAuthorId().equals(requesterId))
 			throw new PostForbiddenException("User is not authorized to edit this post");
-		Set<Tag> tags = command.tags().stream()
-			.map(x -> Tag.create(x))
-			.collect(Collectors.toSet());
-		post.updateArticle(command.title(), command.body(), tags);
-		return postRepository.save(post);
+		if (!(post instanceof Article article))
+			throw new PostConflictException("Only articles can have their title and tags changed.");
+		article.update(
+			Title.create(command.title()),
+			Body.create(command.body()),
+			command.tags().stream()
+				.map(Tag::create)
+				.collect(Collectors.toSet()));
+		return postRepository.save(article);
 	}
 
 	@Transactional

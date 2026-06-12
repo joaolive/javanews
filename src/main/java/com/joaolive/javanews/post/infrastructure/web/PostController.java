@@ -23,6 +23,8 @@ import com.joaolive.javanews.core.PaginationRequest;
 import com.joaolive.javanews.post.application.PostService;
 import com.joaolive.javanews.post.application.PostQueryService;
 import com.joaolive.javanews.post.application.command.DeletePostCommand;
+import com.joaolive.javanews.post.domain.Article;
+import com.joaolive.javanews.post.domain.Comment;
 import com.joaolive.javanews.post.domain.Post;
 
 import jakarta.validation.Valid;
@@ -41,14 +43,14 @@ public class PostController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PostResponse> findArticleById(@PathVariable UUID id) {
+	public ResponseEntity<PostResponse> findById(@PathVariable UUID id) {
 		Post post = postQueryService.findById(id);
 		PostResponse response = PostResponse.from(post);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping
-	public ResponseEntity<PageResult<PostResponse>> findAll(
+	public ResponseEntity<PageResult<PostResponse>> findAllArticles(
 			@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
 		Sort.Order sortOrder = pageable.getSort().stream().findFirst()
@@ -58,13 +60,13 @@ public class PostController {
 				pageable.getPageSize(),
 				sortOrder.getProperty(),
 				sortOrder.getDirection().name());
-		PageResult<Post> domainPage = postQueryService.findAll(paginationRequest);
+		PageResult<Article> domainPage = postQueryService.findAllArticles(paginationRequest);
 		PageResult<PostResponse> response = domainPage.map(PostResponse::from);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/author/{username}")
-	public ResponseEntity<PageResult<PostResponse>> findArticleByAuthor(
+	public ResponseEntity<PageResult<PostResponse>> findPostsByAuthor(
 		@PathVariable String username,
 		@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
@@ -75,7 +77,7 @@ public class PostController {
 			pageable.getPageSize(),
 			sortOrder.getProperty(),
 			sortOrder.getDirection().name());
-		PageResult<Post> domainPage = postQueryService.findArticleByAuthor(username, paginationRequest);
+		PageResult<Post> domainPage = postQueryService.findPostsByAuthor(username, paginationRequest);
 		PageResult<PostResponse> response = new PageResult<>(
 			domainPage.data().stream()
 					.map(x -> PostResponse.from(x))
@@ -92,20 +94,20 @@ public class PostController {
 		@PathVariable String username,
 		@PathVariable String slug
 	) {
-		Post post = postQueryService.findArticleBySlug(username, slug);
-		PostResponse response = PostResponse.from(post);
+		Article article = postQueryService.findArticleBySlug(username, slug);
+		PostResponse response = PostResponse.from(article);
 		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping
 	public ResponseEntity<PostResponse> createArticle(
-			@Valid @RequestBody CreatePostRequest request,
+			@Valid @RequestBody CreateArticleRequest request,
 			@AuthenticationPrincipal Jwt jwt) {
 		UUID authorId = UUID.fromString(jwt.getClaimAsString("user_id"));
-		Post post = postService.createArticle(request.toCommand(authorId));
+		Article article = postService.createArticle(request.toCommand(authorId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(post.getId()).toUri();
-		return ResponseEntity.created(uri).body(PostResponse.from(post));
+				.buildAndExpand(article.getId()).toUri();
+		return ResponseEntity.created(uri).body(PostResponse.from(article));
 	}
 
 	@PostMapping("/{id}/comments")
@@ -115,21 +117,21 @@ public class PostController {
 		@AuthenticationPrincipal Jwt jwt
 	) {
 		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
-		Post post = postService.createComment(request.toCommand(id, requesterId));
+		Comment comment = postService.createComment(request.toCommand(id, requesterId));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(post.getId()).toUri();
-		return ResponseEntity.created(uri).body(PostResponse.from(post));
+				.buildAndExpand(comment.getId()).toUri();
+		return ResponseEntity.created(uri).body(PostResponse.from(comment));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<PostResponse> updateArticle(
 		@PathVariable UUID id,
-		@Valid @RequestBody UpdatePostRequest request,
+		@Valid @RequestBody UpdateArticleRequest request,
 		@AuthenticationPrincipal Jwt jwt
 	) {
 		UUID requesterId = UUID.fromString(jwt.getClaimAsString("user_id"));
-		Post post = postService.updateArticle(id, requesterId, request.toCommand());
-		return ResponseEntity.ok(PostResponse.from(post));
+		Article article = postService.updateArticle(id, requesterId, request.toCommand());
+		return ResponseEntity.ok(PostResponse.from(article));
 	}
 
 	@DeleteMapping("/{id}")

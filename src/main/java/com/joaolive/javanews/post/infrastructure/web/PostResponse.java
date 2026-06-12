@@ -7,9 +7,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.joaolive.javanews.post.domain.Article;
+import com.joaolive.javanews.post.domain.Comment;
 import com.joaolive.javanews.post.domain.Post;
-import com.joaolive.javanews.post.domain.valueobject.Slug;
-import com.joaolive.javanews.post.domain.valueobject.Title;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record PostResponse(
@@ -26,19 +26,34 @@ public record PostResponse(
 	List<PostResponse> children
 ) {
 	public static PostResponse from(Post domain, List<PostResponse> children) {
-		return new PostResponse(
-			domain.getId(),
-			domain.getParentId(),
-			domain.getType().name(),
-			domain.getTitle().map(Title::value).orElse(null),
-			domain.getSlug().map(Slug::value).orElse(null),
-			domain.getBody().value(),
-			domain.getAuthorId(),
-			domain.getCreatedAt(),
-			domain.getUpdatedAt(),
-			domain.getTags().stream().map(x -> x.value()).collect(Collectors.toSet()),
-			children
-		);
+		return switch (domain) {
+			case Article article -> new PostResponse(
+				article.getId(),
+				null,
+				article.getType().name(),
+				article.getTitle().value(),
+				article.getSlug().value(),
+				article.getBody().value(),
+				article.getAuthorId(),
+				article.getCreatedAt(),
+				article.getUpdatedAt(),
+				article.getTags().stream().map(x -> x.value()).collect(Collectors.toSet()),
+				children
+			);
+			case Comment comment -> new PostResponse(
+				comment.getId(),
+				comment.getParentId(),
+				comment.getType().name(),
+				null,
+				null,
+				comment.getBody().value(),
+				comment.getAuthorId(),
+				comment.getCreatedAt(),
+				comment.getUpdatedAt(),
+				Set.of(),
+				children
+			);
+		};
 	}
 
 	public static PostResponse from(Post domain) {

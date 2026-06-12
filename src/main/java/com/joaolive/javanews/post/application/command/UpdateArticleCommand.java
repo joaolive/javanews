@@ -2,7 +2,7 @@ package com.joaolive.javanews.post.application.command;
 
 import java.util.Set;
 
-public record UpdatePostCommand(
+public record UpdateArticleCommand(
 	String title,
 	String body,
 	Set<String> tags

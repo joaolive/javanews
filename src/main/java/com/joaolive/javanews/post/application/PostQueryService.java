@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joaolive.javanews.core.PageResult;
 import com.joaolive.javanews.core.PaginationRequest;
+import com.joaolive.javanews.post.domain.Article;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.domain.PostRepository;
 import com.joaolive.javanews.post.domain.exception.PostNotFoundException;
@@ -29,37 +30,30 @@ public class PostQueryService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResult<Post> findAll(PaginationRequest request) {
-		String safeSortBy = request.sortBy()
-			.equalsIgnoreCase("title")
-				? "title" : "createdAt";
-		PaginationRequest safeRequest = new PaginationRequest(
+	public PageResult<Article> findAllArticles(PaginationRequest request) {
+		String safeSortBy = request.sortBy().equalsIgnoreCase("title") ? "title" : "createdAt";
+		return postRepository.findAllArticles(new PaginationRequest(
 			request.page(),
 			request.size(),
 			safeSortBy,
-			request.direction()
-		);
-		return postRepository.findAll(safeRequest);
+			request.direction()));
 	}
 
 	@Transactional(readOnly = true)
-	public PageResult<Post> findArticleByAuthor(String username, PaginationRequest request) {
+	public PageResult<Post> findPostsByAuthor(String username, PaginationRequest request) {
 		UUID authorId = userInternalApi.findIdByUsername(username)
 			.orElseThrow(() -> new PostNotFoundException("Author not found"));
-		String safeSortBy = request.sortBy()
-			.equalsIgnoreCase("title")
-				? "title" : "createdAt";
 		PaginationRequest safeRequest = new PaginationRequest(
 			request.page(),
 			request.size(),
-			safeSortBy,
+			request.sortBy().equalsIgnoreCase("updatedAt") ? "updatedAt" : "createdAt",
 			request.direction()
 		);
 		return postRepository.findByAuthorId(authorId, safeRequest);
 	}
 
 	@Transactional(readOnly = true)
-	public Post findArticleBySlug(String username, String slug) {
+	public Article findArticleBySlug(String username, String slug) {
 		UUID authorId = userInternalApi.findIdByUsername(username)
 			.orElseThrow(() -> new PostNotFoundException("Post not found"));
 		return postRepository.findByAuthorIdAndSlug(authorId, slug)
