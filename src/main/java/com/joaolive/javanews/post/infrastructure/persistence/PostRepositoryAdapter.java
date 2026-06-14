@@ -128,6 +128,11 @@ public class PostRepositoryAdapter implements PostRepository {
 	}
 
 	@Override
+	public void updateAuthorUsername(UUID authorId, String newUsername) {
+		postRepository.updateAuthorUsername(authorId, newUsername);
+	}
+
+	@Override
 	public void delete(UUID id) {
 		postRepository.deleteById(id);
 	}

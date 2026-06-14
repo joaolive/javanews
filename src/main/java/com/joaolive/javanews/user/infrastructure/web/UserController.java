@@ -76,4 +76,5 @@ public class UserController {
 		User user = userService.updateUsername(requester.id(), request.username());
 		return ResponseEntity.ok(UserResponse.from(user));
 	}
+
 }

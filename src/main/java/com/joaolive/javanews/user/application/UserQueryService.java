@@ -22,7 +22,7 @@ public class UserQueryService {
 	@Transactional(readOnly = true)
 	public User findById(UUID id) {
 		return (userRepository.findById(id)
-			.orElseThrow(() -> new UserNotFoundException("User with ID '" + id + "' not found")));
+			.orElseThrow(() -> new UserNotFoundException("User not found")));
 	}
 
 	@Transactional(readOnly = true)

@@ -13,4 +13,5 @@ public interface PostRepository {
 	PageResult<Post> findByAuthorId(UUID id, PaginationRequest request);
 	void delete(UUID id);
 	Optional<Article> findByAuthorIdAndSlug(UUID authorId, String slug);
+	void updateAuthorUsername(UUID authorId, String newUsername);
 }
