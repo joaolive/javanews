@@ -6,6 +6,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joaolive.javanews.profile.domain.valueobject.Bio;
+import com.joaolive.javanews.profile.domain.valueobject.Name;
+import com.joaolive.javanews.profile.domain.valueobject.Username;
 import com.joaolive.javanews.user.UserUsernameChangeEvent;
 import com.joaolive.javanews.user.application.command.CreateUserCommand;
 import com.joaolive.javanews.user.application.command.UpdateProfileCommand;
@@ -13,10 +16,7 @@ import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.exception.UserConflictException;
 import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
-import com.joaolive.javanews.user.domain.valueobject.Bio;
 import com.joaolive.javanews.user.domain.valueobject.Email;
-import com.joaolive.javanews.user.domain.valueobject.Name;
-import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Service
 public class UserService {

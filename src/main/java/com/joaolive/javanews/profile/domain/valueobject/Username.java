@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.domain.valueobject;
+package com.joaolive.javanews.profile.domain.valueobject;
 
 import java.util.Objects;
 

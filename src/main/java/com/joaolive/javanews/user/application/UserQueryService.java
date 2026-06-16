@@ -5,11 +5,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joaolive.javanews.profile.domain.valueobject.Username;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
 import com.joaolive.javanews.user.domain.valueobject.Email;
-import com.joaolive.javanews.user.domain.valueobject.Username;
 
 @Service
 public class UserQueryService {

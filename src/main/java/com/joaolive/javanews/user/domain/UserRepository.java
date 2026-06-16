@@ -3,8 +3,8 @@ package com.joaolive.javanews.user.domain;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.joaolive.javanews.profile.domain.valueobject.Username;
 import com.joaolive.javanews.user.domain.valueobject.Email;
-import com.joaolive.javanews.user.domain.valueobject.Username;
 
 public interface UserRepository {
 	User save(User user);

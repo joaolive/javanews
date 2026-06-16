@@ -1,4 +1,4 @@
-package com.joaolive.javanews.user.domain.valueobject;
+package com.joaolive.javanews.profile.domain.valueobject;
 
 public class Bio {
 	private final String value;
