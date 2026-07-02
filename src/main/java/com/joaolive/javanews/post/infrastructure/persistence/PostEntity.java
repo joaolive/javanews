@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.joaolive.javanews.core.Identifiable;
+import com.joaolive.javanews.common.Identifiable;
 import com.joaolive.javanews.post.domain.valueobject.PostType;
 
 import jakarta.persistence.Column;

@@ -4,7 +4,7 @@ import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 import com.joaolive.javanews.post.domain.PostRepository;
-import com.joaolive.javanews.user.UserUsernameChangeEvent;
+import com.joaolive.javanews.profile.ProfileUsernameChangedEvent;
 
 @Component
 public class UpdatePostAuthorOnUsernameChangeListener {
@@ -15,7 +15,7 @@ public class UpdatePostAuthorOnUsernameChangeListener {
 	}
 
 	@ApplicationModuleListener
-	void on(UserUsernameChangeEvent event) {
+	void on(ProfileUsernameChangedEvent event) {
 		postRepository.updateAuthorUsername(event.id(), event.username());
 	}
 }

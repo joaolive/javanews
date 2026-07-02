@@ -2,7 +2,7 @@ package com.joaolive.javanews.post.infrastructure.web;
 
 import java.util.UUID;
 
-import com.joaolive.javanews.post.application.command.CreateCommentCommand;
+import com.joaolive.javanews.post.application.CreateCommentCommand;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

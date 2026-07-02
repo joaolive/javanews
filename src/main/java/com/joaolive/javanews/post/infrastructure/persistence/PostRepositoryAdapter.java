@@ -12,9 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import com.joaolive.javanews.core.BatchFetchAligner;
-import com.joaolive.javanews.core.PageResult;
-import com.joaolive.javanews.core.PaginationRequest;
+import com.joaolive.javanews.common.BatchFetchAligner;
+import com.joaolive.javanews.common.PageResult;
+import com.joaolive.javanews.common.PaginationRequest;
 import com.joaolive.javanews.post.domain.Article;
 import com.joaolive.javanews.post.domain.Post;
 import com.joaolive.javanews.post.domain.PostRepository;
@@ -135,6 +135,11 @@ public class PostRepositoryAdapter implements PostRepository {
 	@Override
 	public void delete(UUID id) {
 		postRepository.deleteById(id);
+	}
+
+	@Override
+	public boolean existsById(UUID id) {
+		return postRepository.existsById(id);
 	}
 
 }

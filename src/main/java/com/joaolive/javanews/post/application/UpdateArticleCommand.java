@@ -1,4 +1,4 @@
-package com.joaolive.javanews.post.application.command;
+package com.joaolive.javanews.post.application;
 
 import java.util.Set;
 

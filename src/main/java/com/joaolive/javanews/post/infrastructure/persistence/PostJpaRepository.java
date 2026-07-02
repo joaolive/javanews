@@ -28,6 +28,6 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
 	Optional<PostEntity> findByAuthorIdAndSlugAndType(UUID authorId, String slug, PostType type);
 
 	@Modifying
-	@Query("UPDATE PostEntity p SET p.authorUsername = :newUsername WHERE p.authorId = :authorId")
+	@Query("UPDATE PostEntity p SET p.author = :newUsername WHERE p.authorId = :authorId")
 	void updateAuthorUsername(@Param("authorId") UUID authorId, @Param("newUsername") String newUsername);
 }

@@ -2,7 +2,7 @@ package com.joaolive.javanews.post.infrastructure.web;
 
 import java.util.Set;
 
-import com.joaolive.javanews.post.application.command.UpdateArticleCommand;
+import com.joaolive.javanews.post.application.UpdateArticleCommand;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

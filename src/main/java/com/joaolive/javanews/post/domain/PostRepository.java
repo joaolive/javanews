@@ -3,8 +3,8 @@ package com.joaolive.javanews.post.domain;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.joaolive.javanews.core.PageResult;
-import com.joaolive.javanews.core.PaginationRequest;
+import com.joaolive.javanews.common.PageResult;
+import com.joaolive.javanews.common.PaginationRequest;
 
 public interface PostRepository {
 	<T extends Post>T save(T post);
@@ -14,4 +14,5 @@ public interface PostRepository {
 	void delete(UUID id);
 	Optional<Article> findByAuthorIdAndSlug(UUID authorId, String slug);
 	void updateAuthorUsername(UUID authorId, String newUsername);
+	boolean existsById(UUID id);
 }

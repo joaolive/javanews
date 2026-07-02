@@ -3,7 +3,7 @@ package com.joaolive.javanews.post.infrastructure.web;
 import java.util.Set;
 import java.util.UUID;
 
-import com.joaolive.javanews.post.application.command.CreateArticleCommand;
+import com.joaolive.javanews.post.application.CreateArticleCommand;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

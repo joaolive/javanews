@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.joaolive.javanews.core.CurrentUser;
-import com.joaolive.javanews.core.PageResult;
-import com.joaolive.javanews.core.PaginationRequest;
-import com.joaolive.javanews.core.UserContext;
+import com.joaolive.javanews.auth.CurrentUser;
+import com.joaolive.javanews.auth.UserContext;
+import com.joaolive.javanews.common.PageResult;
+import com.joaolive.javanews.common.PaginationRequest;
 import com.joaolive.javanews.post.application.PostService;
-import com.joaolive.javanews.post.application.PostQueryService;
-import com.joaolive.javanews.post.application.command.DeletePostCommand;
+import com.joaolive.javanews.post.application.DeletePostCommand;
 import com.joaolive.javanews.post.domain.Article;
 import com.joaolive.javanews.post.domain.Comment;
 import com.joaolive.javanews.post.domain.Post;
@@ -34,17 +33,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
-	private final PostQueryService postQueryService;
 	private final PostService postService;
 
-	public PostController(PostQueryService postQueryService, PostService postService) {
-		this.postQueryService = postQueryService;
+	public PostController(PostService postService) {
 		this.postService = postService;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<PostResponse> findById(@PathVariable UUID id) {
-		Post post = postQueryService.findById(id);
+		Post post = postService.findById(id);
 		PostResponse response = PostResponse.from(post);
 		return ResponseEntity.ok(response);
 	}
@@ -60,7 +57,7 @@ public class PostController {
 				pageable.getPageSize(),
 				sortOrder.getProperty(),
 				sortOrder.getDirection().name());
-		PageResult<Article> domainPage = postQueryService.findAllArticles(paginationRequest);
+		PageResult<Article> domainPage = postService.findAllArticles(paginationRequest);
 		PageResult<PostResponse> response = domainPage.map(PostResponse::from);
 		return ResponseEntity.ok(response);
 	}
@@ -77,7 +74,7 @@ public class PostController {
 			pageable.getPageSize(),
 			sortOrder.getProperty(),
 			sortOrder.getDirection().name());
-		PageResult<Post> domainPage = postQueryService.findPostsByAuthor(username, paginationRequest);
+		PageResult<Post> domainPage = postService.findPostsByAuthor(username, paginationRequest);
 		PageResult<PostResponse> response = domainPage.map(PostResponse::from);
 		return ResponseEntity.ok(response);
 	}
@@ -87,7 +84,7 @@ public class PostController {
 		@PathVariable String username,
 		@PathVariable String slug
 	) {
-		Article article = postQueryService.findArticleBySlug(username, slug);
+		Article article = postService.findArticleBySlug(username, slug);
 		PostResponse response = PostResponse.from(article);
 		return ResponseEntity.ok(response);
 	}

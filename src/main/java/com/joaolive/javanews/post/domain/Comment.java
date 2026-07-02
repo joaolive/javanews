@@ -35,7 +35,7 @@ public final class Comment extends Post {
 
 	@Override
 	public PostType getType() {
-		return PostType.ARTICLE;
+		return PostType.COMMENT;
 	}
 
 }
