@@ -1,6 +1,6 @@
 package com.joaolive.javanews.user.domain.exception;
 
-import com.joaolive.javanews.core.BaseValidationException;
+import com.joaolive.javanews.common.BaseValidationException;
 
 public class UserDomainValidationException extends BaseValidationException {
 	public UserDomainValidationException(String message) {

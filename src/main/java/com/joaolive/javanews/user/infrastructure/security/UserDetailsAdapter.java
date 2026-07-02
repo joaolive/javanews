@@ -31,7 +31,7 @@ public class UserDetailsAdapter implements AuthenticatedUser {
 
 	@Override
 	public String getUsername() {
-		return user.getEmail().getValue();
+		return user.getEmail().value();
 	}
 
 	@Override

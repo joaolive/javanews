@@ -1,14 +1,12 @@
 package com.joaolive.javanews.user.infrastructure.persistence;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
-import com.joaolive.javanews.profile.domain.valueobject.Username;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
 import com.joaolive.javanews.user.domain.valueobject.Email;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserRepositoryAdapter implements UserRepository {
@@ -31,22 +29,12 @@ public class UserRepositoryAdapter implements UserRepository {
 
 	@Override
 	public Optional<User> findByEmail(Email email) {
-		return userRepository.findByEmail(email.getValue()).map(UserMapper::toDomain);
-	}
-
-	@Override
-	public boolean existsByUsername(Username username) {
-		return (userRepository.existsByUsername(username.getValue()));
+		return userRepository.findByEmail(email.value()).map(UserMapper::toDomain);
 	}
 
 	@Override
 	public boolean existsByEmail(Email email) {
-		return userRepository.existsByEmail(email.getValue());
+		return userRepository.existsByEmail(email.value());
 	}
 
-	@Override
-	public Optional<User> findByUsername(String username) {
-		return userRepository.findByUsername(username).map(UserMapper::toDomain);
-	}
-	
 }

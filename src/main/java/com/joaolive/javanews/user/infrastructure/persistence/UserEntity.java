@@ -28,23 +28,10 @@ import lombok.Setter;
 public class UserEntity {
 	@Id
 	private UUID id;
-
 	@Column(unique = true, nullable = false)
 	private String email;
-
-	@Column(unique = true, nullable = false)
-	private String username;
-
 	@Setter(AccessLevel.NONE)
 	private String password;
-
-	private String firstName;
-	private String lastName;
-
-	@Column(columnDefinition = "TEXT")
-	private String bio;
-	
-	private String avatarKey;
 	private Instant createdAt;
 	private Instant updatedAt;
 

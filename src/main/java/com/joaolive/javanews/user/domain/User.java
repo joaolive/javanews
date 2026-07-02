@@ -8,19 +8,18 @@ import com.joaolive.javanews.user.domain.valueobject.Email;
 import com.joaolive.javanews.user.domain.valueobject.Role;
 
 public class User {
-	private final UUID		id;
-	private Email			email;
-	private String			password;
-	private final Instant	createdAt;
-	private Instant			updatedAt;
-	private Set<Role>		roles;
+	private final UUID id;
+	private Email email;
+	private String password;
+	private final Instant createdAt;
+	private Instant updatedAt;
+	private Set<Role> roles;
 
 	private User(UUID id, Email email, String password,
 			Instant createdAt, Instant updatedAt, Set<Role> roles) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
-
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.roles = roles;
