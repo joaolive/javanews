@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core;
+package com.joaolive.javanews.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

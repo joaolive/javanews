@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core.web;
+package com.joaolive.javanews.common.web;
 
 import java.net.URI;
 import java.time.Instant;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.joaolive.javanews.core.BaseConflictException;
-import com.joaolive.javanews.core.BaseForbiddenException;
-import com.joaolive.javanews.core.BaseNotFoundException;
-import com.joaolive.javanews.core.BaseUnauthorizedException;
-import com.joaolive.javanews.core.BaseValidationException;
+import com.joaolive.javanews.common.BaseConflictException;
+import com.joaolive.javanews.common.BaseForbiddenException;
+import com.joaolive.javanews.common.BaseNotFoundException;
+import com.joaolive.javanews.common.BaseUnauthorizedException;
+import com.joaolive.javanews.common.BaseValidationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

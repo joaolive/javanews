@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core.web;
+package com.joaolive.javanews.auth.web;
 
 import java.security.Principal;
 import java.util.UUID;
@@ -11,8 +11,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.joaolive.javanews.core.CurrentUser;
-import com.joaolive.javanews.core.UserContext;
+import com.joaolive.javanews.auth.CurrentUser;
+import com.joaolive.javanews.auth.UserContext;
 
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
 	@Override

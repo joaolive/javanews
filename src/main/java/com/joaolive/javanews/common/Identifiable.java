@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core;
+package com.joaolive.javanews.common;
 
 public interface Identifiable<ID> {
 	ID getId();

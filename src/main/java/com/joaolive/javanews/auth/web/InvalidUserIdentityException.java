@@ -1,6 +1,6 @@
-package com.joaolive.javanews.core.web;
+package com.joaolive.javanews.auth.web;
 
-import com.joaolive.javanews.core.BaseUnauthorizedException;
+import com.joaolive.javanews.common.BaseUnauthorizedException;
 
 public class InvalidUserIdentityException extends BaseUnauthorizedException {
 	public InvalidUserIdentityException(String message) {

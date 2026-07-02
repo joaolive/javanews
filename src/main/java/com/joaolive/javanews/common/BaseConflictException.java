@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core;
+package com.joaolive.javanews.common;
 
 public class BaseConflictException extends RuntimeException {
 	public BaseConflictException(String message) {

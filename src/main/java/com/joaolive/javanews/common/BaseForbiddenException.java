@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core;
+package com.joaolive.javanews.common;
 
 public abstract class BaseForbiddenException extends RuntimeException {
 	public BaseForbiddenException(String message) {

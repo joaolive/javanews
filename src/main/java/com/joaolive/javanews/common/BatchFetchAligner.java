@@ -1,4 +1,4 @@
-package com.joaolive.javanews.core;
+package com.joaolive.javanews.common;
 
 import java.util.List;
 import java.util.Map;
