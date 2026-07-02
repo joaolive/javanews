@@ -5,11 +5,17 @@ databaseChangeLog:
       relativeToChangelogFile: true
 
   - includeAll:
-      path: "db/changelog/user/"
+      path: "user/"
       errorIfMissingOrEmpty: true
-      relativeToChangelogFile: false
+      relativeToChangelogFile: true
+
+  - includeAll:
+      path: "profile/"
+      errorIfMissingOrEmpty: true
+      relativeToChangelogFile: true
 
   - includeAll:
       path: "post/"
       errorIfMissingOrEmpty: true
       relativeToChangelogFile: true
+

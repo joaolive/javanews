@@ -4,9 +4,9 @@
 ALTER TABLE tb_post ADD COLUMN author VARCHAR(255);
 
 UPDATE tb_post p 
-SET author = u.username
-FROM tb_user u
-WHERE p.author_id = u.id;
+SET author = pr.username
+FROM tb_profile pr
+WHERE p.author_id = pr.user_id;
 
 ALTER TABLE tb_post
 ALTER COLUMN author SET NOT NULL;
