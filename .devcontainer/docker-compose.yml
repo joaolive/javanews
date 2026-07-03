@@ -37,6 +37,17 @@ services:
     networks:
       - spring-dev-network
 
+  mailpit:
+    image: axllent/mailpit:v1.30
+    container_name: javanews-mailpit
+    ports:
+      - "8025:8025" # Interface Web (Dashboard para ver os e-mails)
+      - "1025:1025" # Porta SMTP (Onde o Spring Boot vai conectar)
+    environment:
+      MP_MAX_MESSAGES: 500
+    networks:
+      - spring-dev-network
+
 volumes:
   postgres-data:
 
