@@ -29,7 +29,7 @@ public class CreateProfileOnUserRegisterListener {
 			Name.create(event.firstName()),
 			Name.create(event.lastName()),
 			Username.create(event.username()),
-			Bio.create(""),
+			Bio.create(null),
 			null
 		);
 		try {
