@@ -41,4 +41,9 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
 	public void flush() {
 		this.profileRepository.flush();
 	}
+
+	@Override
+	public boolean existsByUserId(UUID userId) {
+		return profileRepository.existsById(userId);
+	}
 }

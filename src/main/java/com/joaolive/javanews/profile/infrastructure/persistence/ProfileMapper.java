@@ -16,7 +16,7 @@ public class ProfileMapper {
 			domain.getAvatarKey(),
 			domain.getCreatedAt(),
 			domain.getUpdatedAt(),
-			domain.getVersion()
+			null
 		);
 	}
 	public static Profile toDomain(ProfileEntity entity) {
@@ -30,8 +30,7 @@ public class ProfileMapper {
 			entity.getBio(),
 			entity.getAvatarKey(),
 			entity.getCreatedAt(),
-			entity.getUpdatedAt(),
-			entity.getVersion()
+			entity.getUpdatedAt()
 		);
 	}
 }

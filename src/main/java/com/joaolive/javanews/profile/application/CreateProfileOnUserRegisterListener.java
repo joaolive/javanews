@@ -22,6 +22,8 @@ public class CreateProfileOnUserRegisterListener {
 
 	@ApplicationModuleListener
 	public void on(UserRegisterEvent event) {
+		if (profileRepository.existsByUserId(event.userId()))
+			return;
 		Profile profile = Profile.create(
 			event.userId(),
 			Name.create(event.firstName()),

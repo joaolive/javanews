@@ -9,5 +9,6 @@ public interface ProfileRepository {Profile save(Profile profile);
 	Optional<Profile> findById(UUID userId);
 	Optional<Profile> findByUsername(String username);
 	boolean existsByUsername(Username username);
+	boolean existsByUserId(UUID userId);
 	void flush();
 }

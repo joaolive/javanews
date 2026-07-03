@@ -16,9 +16,8 @@ public class Profile {
 	private String			avatarKey;
 	private final Instant	createdAt;
 	private Instant			updatedAt;
-	private Long			version;
 
-	private Profile(UUID userId, Name firstName, Name lastName, Username username, Bio bio, String avatarKey, Instant createdAt, Instant updatedAt, Long version) {
+	private Profile(UUID userId, Name firstName, Name lastName, Username username, Bio bio, String avatarKey, Instant createdAt, Instant updatedAt) {
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -27,16 +26,15 @@ public class Profile {
 		this.avatarKey = avatarKey;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-		this.version = version;
 	}
 
 	public static Profile create(UUID userId, Name firstName, Name lastName, Username username, Bio bio, String avatarKey) {
 		Instant now = Instant.now();
-		return new Profile(userId, firstName, lastName, username, bio, avatarKey, now, now, 0L);
+		return new Profile(userId, firstName, lastName, username, bio, avatarKey, now, now);
 	}
 
-	public static Profile reconstitute(UUID userId, String firstName, String lastName, String username, String bio, String avatarKey, Instant createdAt, Instant updatedAt, Long version) {
-		return new Profile(userId, Name.restore(firstName), Name.restore(lastName), Username.restore(username), Bio.restore(bio), avatarKey, createdAt, updatedAt, version);
+	public static Profile reconstitute(UUID userId, String firstName, String lastName, String username, String bio, String avatarKey, Instant createdAt, Instant updatedAt) {
+		return new Profile(userId, Name.restore(firstName), Name.restore(lastName), Username.restore(username), Bio.restore(bio), avatarKey, createdAt, updatedAt);
 	}
 
 	public UUID getUserId() {
@@ -69,10 +67,6 @@ public class Profile {
 
 	public Instant getUpdatedAt() {
 		return updatedAt;
-	}
-
-	public Long getVersion() {
-		return version;
 	}
 
 	public void update(Name firstName, Name lastName, Bio bio, String avatarKey) {
