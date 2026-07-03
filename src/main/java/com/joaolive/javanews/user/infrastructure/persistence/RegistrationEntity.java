@@ -3,8 +3,13 @@ package com.joaolive.javanews.user.infrastructure.persistence;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.joaolive.javanews.user.domain.Registration.RegistrationStatus;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import com.joaolive.javanews.user.domain.Registration.RegistrationStatus;
+import com.joaolive.javanews.user.domain.RegistrationPayload;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,14 +32,13 @@ public class RegistrationEntity {
 	@Id
 	private UUID id;
 	private String email;
-	private String password;
-	private String username;
-	private String firstName;
-	private String lastName;
 	private String verificationCode;
 	@Enumerated(EnumType.STRING)
 	private RegistrationStatus status;
 	private Instant createdAt;
 	private Instant expiresAt;
 	private Integer failedAttempts;
+	@JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "payload", nullable = false, columnDefinition = "jsonb")
+    private RegistrationPayload payload;
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joaolive.javanews.user.RegistrationInitiatedEvent;
 import com.joaolive.javanews.user.UserRegisterEvent;
 import com.joaolive.javanews.user.domain.Registration;
+import com.joaolive.javanews.user.domain.RegistrationPayload;
 import com.joaolive.javanews.user.domain.RegistrationRepository;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
@@ -37,7 +38,8 @@ public class RegistrationService {
 		if (userRepository.existsByEmail(email))
 			throw new UserConflictException("Email is already in use");
 		String hash = passwordEncoder.encode(command.password());
-		Registration registration = Registration.create(email, hash, command.username(), command.firstName(), command.lastName());
+		RegistrationPayload payload = new RegistrationPayload(hash, command.username(), command.firstName(), command.lastName());
+		Registration registration = Registration.create(email, payload);
 		registrationRepository.save(registration);
 		publisher.publishEvent(new RegistrationInitiatedEvent(email.value(), registration.getVerificationCode()));
 	}
@@ -48,15 +50,19 @@ public class RegistrationService {
 			.orElseThrow(() -> new UserNotFoundException("Record not found"));
 		VerificationResult result = registration.verify(command.code());
 		registrationRepository.save(registration);
-		if (result == VerificationResult.SUCCESS) {
-			User user = User.create(email, registration.getPassword());
-			user = userRepository.save(user);
-			publisher.publishEvent(new UserRegisterEvent(
-				user.getId(),
-				registration.getUsername(),
-				registration.getFirstName(),
-				registration.getLastName()));
+		if (result != VerificationResult.SUCCESS) {
+			registrationRepository.save(registration);
+			return result;
 		}
+		RegistrationPayload payload = registration.getPayload();
+		User user = User.create(email, payload.password());
+		user = userRepository.save(user);
+		registrationRepository.deleteById(registration.getId());
+		publisher.publishEvent(new UserRegisterEvent(
+			user.getId(),
+			payload.username(),
+			payload.firstName(),
+			payload.lastName()));
 		return result;
 	}
 }

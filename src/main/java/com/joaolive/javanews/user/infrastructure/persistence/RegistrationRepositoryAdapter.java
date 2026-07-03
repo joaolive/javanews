@@ -1,6 +1,7 @@
 package com.joaolive.javanews.user.infrastructure.persistence;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,11 @@ public class RegistrationRepositoryAdapter implements RegistrationRepository {
 	public Optional<Registration> findByEmailAndStatusPending(Email email) {
 		return jpaRepository.findByEmailAndStatus(email.value(), RegistrationStatus.PENDING)
 			.map(RegistrationMapper::toDomain);
+	}
+
+	@Override
+	public void deleteById(UUID id) {
+		jpaRepository.deleteById(id);
 	}
 	
 }

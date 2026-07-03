@@ -10,15 +10,12 @@ import com.joaolive.javanews.user.domain.valueobject.Email;
 public class Registration {
 	private UUID id;
 	private Email email;
-	private String password;
-	private String username;
-	private String firstName;
-	private String lastName;
 	private String verificationCode;
 	private RegistrationStatus status;
 	private Instant createdAt;
 	private Instant expiresAt;
 	private int failedAttempts;
+	private final RegistrationPayload payload;
 
 	private static final int MAX_ATTEMPTS = 5;
 	private static final int EXPIRATION_MINUTES = 15;
@@ -27,7 +24,6 @@ public class Registration {
 
 	public enum RegistrationStatus {
 		PENDING,
-		CONFIRMED,
 		FAILED
 	}
 
@@ -38,31 +34,28 @@ public class Registration {
 		BLOCKED
 	}
 
-	private Registration(UUID id, Email email, String password, String username, String firstName, String lastName,
-			String verificationCode, RegistrationStatus status, Instant createdAt, Instant expiresAt, int failedAttempts) {
+	public Registration(UUID id, Email email, String verificationCode, RegistrationStatus status, Instant createdAt,
+			Instant expiresAt, int failedAttempts, RegistrationPayload payload) {
 		this.id = id;
 		this.email = email;
-		this.password = password;
-		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
 		this.verificationCode = verificationCode;
 		this.status = status;
 		this.createdAt = createdAt;
 		this.expiresAt = expiresAt;
 		this.failedAttempts = failedAttempts;
+		this.payload = payload;
 	}
 
-	public static Registration create(Email email, String password, String username, String firstName, String lastName) {
+	public static Registration create(Email email, RegistrationPayload payload) {
 		Instant now = Instant.now();
 		Instant expiration = now.plus(EXPIRATION_MINUTES, ChronoUnit.MINUTES);
 		String code = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
-		return new Registration(UUID.randomUUID(), email, password, username, firstName, lastName, code, RegistrationStatus.PENDING, now, expiration, 0);
+		return new Registration(UUID.randomUUID(), email, code, RegistrationStatus.PENDING, now, expiration, 0, payload);
 	}
 
-	public static Registration reconstitute(UUID id, String email, String password,
-			String username, String firstName, String lastName, String verificationCode, RegistrationStatus status, Instant createdAt, Instant expiresAt, int failedAttempts) {
-		return new Registration(id, Email.restore(email), password, username, firstName, lastName, verificationCode, status, createdAt, expiresAt, failedAttempts);
+	public static Registration reconstitute(UUID id, String email, String verificationCode, RegistrationStatus status,
+			Instant createdAt, Instant expiresAt, int failedAttempts, RegistrationPayload payload) {
+		return new Registration(id, Email.restore(email), verificationCode, status, createdAt, expiresAt, failedAttempts, payload);
 	}
 
 	public VerificationResult verify(String code, Instant currentTime) {
@@ -82,7 +75,6 @@ public class Registration {
 			}
 			return VerificationResult.INVALID_CODE;
 		}
-		this.status = RegistrationStatus.CONFIRMED;
 		return VerificationResult.SUCCESS;
 	}
 
@@ -96,22 +88,6 @@ public class Registration {
 
 	public Email getEmail() {
 		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
 	}
 
 	public String getVerificationCode() {
@@ -132,6 +108,10 @@ public class Registration {
 
 	public int getFailedAttempts() {
 		return failedAttempts;
+	}
+
+	public RegistrationPayload getPayload() {
+		return payload;
 	}
 
 }
