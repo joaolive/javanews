@@ -1,16 +1,16 @@
 package com.joaolive.javanews.user.domain;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import com.joaolive.javanews.user.domain.valueobject.Email;
+import com.joaolive.javanews.user.domain.valueobject.VerificationCode;
 
 public class Registration {
 	private UUID id;
 	private Email email;
-	private String verificationCode;
+	private VerificationCode verificationCode;
 	private RegistrationStatus status;
 	private Instant createdAt;
 	private Instant expiresAt;
@@ -19,8 +19,6 @@ public class Registration {
 
 	private static final int MAX_ATTEMPTS = 5;
 	private static final int EXPIRATION_MINUTES = 15;
-
-	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	public enum RegistrationStatus {
 		PENDING,
@@ -34,7 +32,7 @@ public class Registration {
 		BLOCKED
 	}
 
-	public Registration(UUID id, Email email, String verificationCode, RegistrationStatus status, Instant createdAt,
+	public Registration(UUID id, Email email, VerificationCode verificationCode, RegistrationStatus status, Instant createdAt,
 			Instant expiresAt, int failedAttempts, RegistrationPayload payload) {
 		this.id = id;
 		this.email = email;
@@ -46,40 +44,52 @@ public class Registration {
 		this.payload = payload;
 	}
 
-	public static Registration create(Email email, RegistrationPayload payload) {
-		Instant now = Instant.now();
+	public static Registration create(Email email, Instant now, RegistrationPayload payload) {
 		Instant expiration = now.plus(EXPIRATION_MINUTES, ChronoUnit.MINUTES);
-		String code = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
-		return new Registration(UUID.randomUUID(), email, code, RegistrationStatus.PENDING, now, expiration, 0, payload);
+		return new Registration(UUID.randomUUID(), email, VerificationCode.generate(), RegistrationStatus.PENDING, now, expiration, 0, payload);
 	}
 
 	public static Registration reconstitute(UUID id, String email, String verificationCode, RegistrationStatus status,
 			Instant createdAt, Instant expiresAt, int failedAttempts, RegistrationPayload payload) {
-		return new Registration(id, Email.restore(email), verificationCode, status, createdAt, expiresAt, failedAttempts, payload);
+		return new Registration(id, Email.restore(email), VerificationCode.restore(verificationCode), status, createdAt, expiresAt, failedAttempts, payload);
 	}
 
 	public VerificationResult verify(String code, Instant currentTime) {
-		if (this.status == RegistrationStatus.FAILED || this.failedAttempts >= MAX_ATTEMPTS) {
-			this.status = RegistrationStatus.FAILED;
-			return VerificationResult.BLOCKED;
-		}
-		if (currentTime.isAfter(this.expiresAt)) {
-			this.status = RegistrationStatus.FAILED;
-			return VerificationResult.EXPIRED;
-		}
-		if (!this.verificationCode.equals(code)) {
-			this.failedAttempts++;
-			if (this.failedAttempts >= MAX_ATTEMPTS) {
-				this.status = RegistrationStatus.FAILED;
-				return VerificationResult.BLOCKED;
-			}
-			return VerificationResult.INVALID_CODE;
-		}
+		if (isAlreadyBlocked())
+			return failWith(VerificationResult.BLOCKED);
+		if (isExpired(currentTime))
+			return failWith(VerificationResult.EXPIRED);
+		if (isInvalid(code))
+			return handleInvalidCode();
 		return VerificationResult.SUCCESS;
 	}
 
 	public VerificationResult verify(String code) {
 		return verify(code, Instant.now());
+	}
+
+	private boolean isAlreadyBlocked() {
+		return this.status == RegistrationStatus.FAILED || this.failedAttempts >= MAX_ATTEMPTS;
+	}
+
+	private boolean isExpired(Instant currentTime) {
+		return currentTime.isAfter(this.expiresAt);
+	}
+
+	private boolean isInvalid(String inputCode) {
+		return !this.verificationCode.value().equals(inputCode);
+	}
+
+	private VerificationResult failWith(VerificationResult result) {
+		this.status = RegistrationStatus.FAILED;
+		return result;
+	}
+
+	private VerificationResult handleInvalidCode() {
+		this.failedAttempts++;
+		if (this.failedAttempts >= MAX_ATTEMPTS)
+			return failWith(VerificationResult.BLOCKED);
+		return VerificationResult.INVALID_CODE;
 	}
 
 	public UUID getId() {
@@ -90,7 +100,7 @@ public class Registration {
 		return email;
 	}
 
-	public String getVerificationCode() {
+	public VerificationCode getVerificationCode() {
 		return verificationCode;
 	}
 

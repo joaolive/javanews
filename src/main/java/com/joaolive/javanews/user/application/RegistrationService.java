@@ -1,5 +1,7 @@
 package com.joaolive.javanews.user.application;
 
+import java.time.Instant;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,9 +41,9 @@ public class RegistrationService {
 			throw new UserConflictException("Email is already in use");
 		String hash = passwordEncoder.encode(command.password());
 		RegistrationPayload payload = new RegistrationPayload(hash, command.username(), command.firstName(), command.lastName());
-		Registration registration = Registration.create(email, payload);
+		Registration registration = Registration.create(email, Instant.now(), payload);
 		registrationRepository.save(registration);
-		publisher.publishEvent(new RegistrationInitiatedEvent(email.value(), registration.getVerificationCode()));
+		publisher.publishEvent(new RegistrationInitiatedEvent(email.value(), registration.getVerificationCode().value()));
 	}
 
 	public VerificationResult confirmRegister(VerifyEmailCommand command) {

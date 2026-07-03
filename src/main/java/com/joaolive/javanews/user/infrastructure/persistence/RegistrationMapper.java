@@ -11,7 +11,7 @@ public class RegistrationMapper {
 		return new RegistrationEntity(
 			domain.getId(),
 			domain.getEmail().value(),
-			domain.getVerificationCode(),
+			domain.getVerificationCode().value(),
 			domain.getStatus(),
 			domain.getCreatedAt(),
 			domain.getExpiresAt(),
