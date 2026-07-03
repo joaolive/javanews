@@ -25,7 +25,7 @@ public class RegistrationRepositoryAdapter implements RegistrationRepository {
 
 	@Override
 	public Optional<Registration> findByEmailAndStatusPending(Email email) {
-		return jpaRepository.findByEmailAndStatus(email.value(), RegistrationStatus.PENDING.name())
+		return jpaRepository.findByEmailAndStatus(email.value(), RegistrationStatus.PENDING)
 			.map(RegistrationMapper::toDomain);
 	}
 	

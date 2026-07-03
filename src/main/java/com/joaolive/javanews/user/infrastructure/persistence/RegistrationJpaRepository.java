@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.joaolive.javanews.user.domain.Registration.RegistrationStatus;
+
 public interface RegistrationJpaRepository extends JpaRepository<RegistrationEntity, UUID> {
-	Optional<RegistrationEntity> findByEmailAndStatus(String email, String status);
+	Optional<RegistrationEntity> findByEmailAndStatus(String email, RegistrationStatus status);
 }

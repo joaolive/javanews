@@ -11,6 +11,7 @@ import com.joaolive.javanews.user.domain.Registration;
 import com.joaolive.javanews.user.domain.RegistrationRepository;
 import com.joaolive.javanews.user.domain.User;
 import com.joaolive.javanews.user.domain.UserRepository;
+import com.joaolive.javanews.user.domain.Registration.VerificationResult;
 import com.joaolive.javanews.user.domain.exception.UserConflictException;
 import com.joaolive.javanews.user.domain.exception.UserNotFoundException;
 import com.joaolive.javanews.user.domain.valueobject.Email;
@@ -41,19 +42,21 @@ public class RegistrationService {
 		publisher.publishEvent(new RegistrationInitiatedEvent(email.value(), registration.getVerificationCode()));
 	}
 
-	public User confirmRegister(VerifyEmailCommand command) {
+	public VerificationResult confirmRegister(VerifyEmailCommand command) {
 		Email email = Email.create(command.email());
 		Registration registration = registrationRepository.findByEmailAndStatusPending(email)
-			.orElseThrow(() -> new UserNotFoundException("Pending registration not found for this email"));
-		registration.verify(command.code());
+			.orElseThrow(() -> new UserNotFoundException("Record not found"));
+		VerificationResult result = registration.verify(command.code());
 		registrationRepository.save(registration);
-		User user = User.create(email, registration.getPassword());
-		user = userRepository.save(user);
-		publisher.publishEvent(new UserRegisterEvent(
-			user.getId(),
-			registration.getUsername(),
-			registration.getFirstName(),
-			registration.getLastName()));
-		return user;
+		if (result == VerificationResult.SUCCESS) {
+			User user = User.create(email, registration.getPassword());
+			user = userRepository.save(user);
+			publisher.publishEvent(new UserRegisterEvent(
+				user.getId(),
+				registration.getUsername(),
+				registration.getFirstName(),
+				registration.getLastName()));
+		}
+		return result;
 	}
 }

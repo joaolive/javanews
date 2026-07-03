@@ -16,8 +16,10 @@ public class RegistrationMapper {
 			domain.getFirstName(),
 			domain.getLastName(),
 			domain.getVerificationCode(),
-			domain.getStatus().name(),
-			domain.getCreatedAt()
+			domain.getStatus(),
+			domain.getCreatedAt(),
+			domain.getExpiresAt(),
+			domain.getFailedAttempts()
 		);
 	}
 
@@ -33,7 +35,9 @@ public class RegistrationMapper {
 			entity.getLastName(),
 			entity.getVerificationCode(),
 			entity.getStatus(),
-			entity.getCreatedAt()
+			entity.getCreatedAt(),
+			entity.getExpiresAt(),
+			entity.getFailedAttempts()
 		);
 	}
 }

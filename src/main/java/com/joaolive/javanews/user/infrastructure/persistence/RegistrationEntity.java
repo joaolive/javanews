@@ -3,7 +3,11 @@ package com.joaolive.javanews.user.infrastructure.persistence;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.joaolive.javanews.user.domain.Registration.RegistrationStatus;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -28,6 +32,9 @@ public class RegistrationEntity {
 	private String firstName;
 	private String lastName;
 	private String verificationCode;
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private RegistrationStatus status;
 	private Instant createdAt;
+	private Instant expiresAt;
+	private Integer failedAttempts;
 }
