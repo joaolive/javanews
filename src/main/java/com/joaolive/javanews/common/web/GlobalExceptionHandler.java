@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.joaolive.javanews.common.BaseConflictException;
 import com.joaolive.javanews.common.BaseForbiddenException;
+import com.joaolive.javanews.common.BaseInfrastructureException;
 import com.joaolive.javanews.common.BaseNotFoundException;
 import com.joaolive.javanews.common.BaseUnauthorizedException;
 import com.joaolive.javanews.common.BaseValidationException;
@@ -66,12 +67,20 @@ public class GlobalExceptionHandler {
 		return problemDetail;
 	}
 
+	@ExceptionHandler(BaseInfrastructureException.class)
+	public ProblemDetail handleInfrastructureException(BaseInfrastructureException ex) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+		problemDetail.setTitle("A technical error occurred in our infrastructure");
+		problemDetail.setType(URI.create("https://api.javanews.com/errors/internal"));
+		problemDetail.setProperty("timestamp", Instant.now());
+		return problemDetail;
+	}
+
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-				HttpStatus.CONFLICT, 
-				"A database conflict or constraint violation occurred."
-		);
+			HttpStatus.CONFLICT, 
+			"A database conflict or constraint violation occurred.");
 		problemDetail.setTitle("Resource Conflict");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/conflict"));
 		problemDetail.setProperty("timestamp", Instant.now());
@@ -81,9 +90,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
 		List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-				.map(error -> error.getField() + ": " + error.getDefaultMessage())
-				.collect(Collectors.toList());
-
+			.map(error -> error.getField() + ": " + error.getDefaultMessage())
+			.collect(Collectors.toList());
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid request payload");
 		problemDetail.setTitle("Bad Request");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/bad-request"));
@@ -96,9 +104,8 @@ public class GlobalExceptionHandler {
 	public ProblemDetail handleUncaughtException(Exception ex) {
 		ex.printStackTrace(); 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-				HttpStatus.INTERNAL_SERVER_ERROR, 
-				"An unexpected internal server error occurred."
-		);
+			HttpStatus.INTERNAL_SERVER_ERROR, 
+			"An unexpected internal server error occurred.");
 		problemDetail.setTitle("Internal Server Error");
 		problemDetail.setType(URI.create("https://api.javanews.com/errors/internal-server-error"));
 		problemDetail.setProperty("timestamp", Instant.now());

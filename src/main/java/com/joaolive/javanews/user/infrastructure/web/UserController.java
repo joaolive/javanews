@@ -4,7 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joaolive.javanews.user.application.RegisterUserCommand;
-import com.joaolive.javanews.user.application.UserService;
+import com.joaolive.javanews.user.application.RegistrationService;
+import com.joaolive.javanews.user.application.VerifyEmailCommand;
 
 import jakarta.validation.Valid;
 
@@ -13,24 +14,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-	private final UserService userService;
+	private final RegistrationService registrationService;
 
-	public UserController(UserService userService) {
-		this.userService = userService;
+	public UserController(RegistrationService registrationService) {
+		this.registrationService = registrationService;
 	}
 
-	@PostMapping
+	@PostMapping("/register")
 	public ResponseEntity<Void> register(@RequestBody @Valid RegisterUserRequest request) {
-		userService.register(new RegisterUserCommand(
+		registrationService.initiateRegister(new RegisterUserCommand(
 			request.firstName(),
 			request.lastName(),
 			request.username(),
 			request.email(),
 			request.password()));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+	}
+
+	@PostMapping("/verify")
+	public ResponseEntity<Void> verify(@RequestBody @Valid VerifyEmailCommand request) {
+		registrationService.confirmRegister(new VerifyEmailCommand(request.email(), request.code()));
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
